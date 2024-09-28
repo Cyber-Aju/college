@@ -11,6 +11,10 @@ class admin
         {
             require('./view/error.php');
         }
+        else
+        {
+            header("Refresh:2;url=http://localhost/college/index.php?mod=student&view=studentlist");
+        }
     }
 }
 ?>

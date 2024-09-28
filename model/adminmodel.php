@@ -12,7 +12,6 @@ class AdminModel extends Connection
 {
     public function __construct()
     {
-        
         $this->connect = $this->connect();
     }
     public function adminValidate($gettedValues)

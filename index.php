@@ -81,7 +81,7 @@ class MainController
             else
             {
                 include $path;
-                $main=new $classname;
+                $main=new $classname($request_datas);
                 $func_name=$request_datas['view'];
                 #dynamically call's the sub-contoller method 
                 call_user_func(array($main,$func_name),$request_datas);
