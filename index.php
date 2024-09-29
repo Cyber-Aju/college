@@ -37,8 +37,8 @@ class MainController
                 ];
                 unset($data['mod'],$data['view']);
                 $datas['request_data']=$data;
-                echo "<pre>";
-                print_r($datas);
+                // echo "<pre>";
+                // print_r($datas);
                 #returns model, view and data in the associate array format
                 $this->run_module($datas);
             }
@@ -81,7 +81,7 @@ class MainController
             else
             {
                 include $path;
-                $main=new $classname($request_datas);
+                $main=new $classname();
                 $func_name=$request_datas['view'];
                 #dynamically call's the sub-contoller method 
                 call_user_func(array($main,$func_name),$request_datas);
@@ -97,4 +97,5 @@ class MainController
 $main=new MainController;
 $main->hook();
 // $absolutePath = dirname(__FILE__); echo $absolutePath;
+// PRINT_R($_SESSION);
 ?>

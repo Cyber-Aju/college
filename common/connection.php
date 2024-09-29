@@ -9,7 +9,7 @@ class Connection
         $connectDB = new PDO("mysql:host=$server;dbname=$databaseName","$user",'1234');
         if($connectDB)
         {
-            echo "Successfully Connected from connection class<br>";
+            // echo "Successfully Connected from connection class<br>";
         }
         else
         {

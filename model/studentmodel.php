@@ -18,7 +18,7 @@ class StudentModel extends Connection
 
     public function studentlist()
     {
-        $list = $this->connect->prepare("SELECT * FROM student WHERE status=:status");
+        $list = $this->connect->prepare("SELECT * FROM student WHERE status=:status || status='Not Active'");
         $status="Active";
         $list->bindParam(":status",$status);
         $list->execute(); //->fetchAll(PDO::FETCH_ASSOC)
@@ -26,14 +26,22 @@ class StudentModel extends Connection
         return $selectList;
     }
 
-    public function studentAdder($getValues)
+    public function studentAdder($getValues,$targetFilePath,$age)
     {
-        $insertQuery = $this->connect->prepare("INSERT INTO student (first_name,last_name,department,email,status) values(:first_name,:last_name,:department,:email,:status)");
+        $insertQuery = $this->connect->prepare("INSERT INTO student (first_name,last_name,department,email,status,phone,dob,address,gender,profile_image,age,blood_group) values(:first_name,:last_name,:department,:email,:status,:phone,:dob,:address,:gender,:profile_image,:age,:blood_group)");
         $insertQuery->bindParam(':first_name',$getValues['first_name']);
         $insertQuery->bindParam(':last_name',$getValues['last_name']);
         $insertQuery->bindParam(':department',$getValues['department']);
         $insertQuery->bindParam(':email',$getValues['email']);
         $insertQuery->bindParam(':status',$getValues['status']);
+        $insertQuery->bindParam(':phone',$getValues['phone']);
+        $insertQuery->bindParam(':dob',$getValues['dob']);
+        $insertQuery->bindParam(':address',$getValues['address']);
+        $insertQuery->bindParam(':gender',$getValues['gender']);
+        $insertQuery->bindParam(':profile_image',$targetFilePath);
+        $insertQuery->bindParam(':age',$age);
+        $insertQuery->bindParam(':blood_group',$getValues['blood_group']);
+
         $checkValid = $insertQuery->execute();
         if($checkValid)
         {
@@ -88,6 +96,26 @@ class StudentModel extends Connection
     {
         $selectIdQuery = $this->connect->query("SELECT * FROM student WHERE student_id={$id}")->fetchAll(PDO::FETCH_ASSOC); //WHERE status='no'
         return $selectIdQuery;
+    }
+
+    public function filter($gettedValues)
+    {
+        // print_r($gettedValues);
+        // foreach($gettedValues as $key=>$value)
+        {
+            // $filter = $this->connect->query("SELECT * FROM student WHERE  ")->fetchAll(PDO::FETCH_ASSOC);
+        }
+        if(($gettedValues['department']) && $gettedValues['status'])
+        {
+            $filter = $this->connect->query("SELECT * FROM student WHERE department='{$gettedValues['department']}' && status='{$gettedValues['status']}'")->fetchAll(PDO::FETCH_ASSOC);
+        }
+        else
+        {
+            // print_r($gettedValues);
+            $filter = $this->connect->query("SELECT * FROM student WHERE department='{$gettedValues['department']}' || status='{$gettedValues['status']}'")->fetchAll(PDO::FETCH_ASSOC);
+        }
+        // $filter = $this->connect->query("SELECT * FROM student WHERE department='{$gettedValues['department']}' || status='{$gettedValues['status']}'")->fetchAll(PDO::FETCH_ASSOC);
+        return $filter;
     }
 
     #__call magic method to handle if invalid function called.
