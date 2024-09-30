@@ -40,6 +40,11 @@ class student
         {
             echo "view not found";
         }
+        if(isset($_GET['status']))
+        {
+            $sts = $_GET['status'];
+            $grpQuer = $this->studentModelObj->particularShow($sts);
+        }
         return null;
     }
 
@@ -77,9 +82,17 @@ class student
                 echo "Error moving the uploaded file.";
             }
             // $para = $this->studentModelObj->studentAdder($getValues, $targetFilePath, $age);
-            echo "$para";
+            // echo "$para";
         }
         // header("Refresh:2;url=http://localhost/college/index.php?mod=student&view=studentList");
+        if (!$para)
+        {
+            echo "False";
+        }
+        else
+        {
+            $this->studentList();
+        }
         return $para;
     }
 
@@ -109,9 +122,16 @@ class student
 
     public function filter()
     {
-        $gettedValues=$_POST;
-        $aa = $this->studentModelObj->filter($gettedValues);
-        print_r($aa);
+        // $gettedValues=$_POST;
+        $department = isset($_GET['department']) ? $_GET['department'] : '';
+        $status = isset($_GET['status']) ? $_GET['status'] : '';
+        $first_name = isset($_GET['first_name']) ? $_GET['first_name'] : '';
+        $list = $this->studentModelObj->getFilteredStudents($department,$status,$first_name);
+        // print_r($aa);
+        // session_start();
+        $adminName = $_SESSION['adminLoggedBy'];
+        require 'view/studentlist.php';
+        // $this->studentList();
         // header("Refresh:2;url=http://localhost/college/index.php?mod=student&view=studentList");
     }
 

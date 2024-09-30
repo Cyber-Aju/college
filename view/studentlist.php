@@ -126,6 +126,29 @@
 	float:right;
 	padding-right:20px;
 }
+.dropdown {
+  position: relative;
+  display: inline-block;
+}
+
+.dropdown-content {
+  display: none;
+  position: absolute;
+  background-color: #f9f9f9;
+  min-width: 80px;
+  box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+  padding: 5px 7px;
+  z-index: 1;
+}
+
+.dropdown-content p a
+{
+  text-decoration: none;
+}
+
+.dropdown:hover .dropdown-content {
+  display: block;
+}
 </style>
 </head>
 <body>
@@ -140,16 +163,59 @@
 						Id
 					</th>
 					<th>
-						Student Name
+						<div class="dropdown">
+						        <span>Student Name</span>
+						        <div class="dropdown-content">
+						            <form method="GET" action="http://localhost/college/index.php?mod=student&view=filter">
+						                <input type="hidden" name="mod" value="student">
+						                <input type="hidden" name="view" value="filter">
+										<input type="text" name="first_name">
+										<button type="submit">Filter</button>
+						            <!-- </form> -->
+						        </div>
+						    </div>
 					</th>
 					<th>
-						Department
+					    <div class="dropdown">
+					        <span>Department</span>
+					        <div class="dropdown-content">
+					            <!-- <form method="GET" action="http://localhost/college/index.php?mod=student&view=filter"> -->
+					                <input type="hidden" name="mod" value="student">
+					                <input type="hidden" name="view" value="filter">
+					                <select name="department" onchange=""> <!-- this.form.submit()--->
+					                    <option value="">Select</option>
+					                    <option value="CSE">CSE</option>
+					                    <option value="ECE">ECE</option>
+					                    <option value="EEE">EEE</option>
+					                    <option value="MECH">MECH</option>
+					                    <option value="IT">IT</option>
+					                </select>
+									<button type="submit">Filter</button>
+					            <!-- </form> -->
+					        </div>
+					    </div>
 					</th>
+								
 					<th>
-						status
+					    <div class="dropdown">
+					        <span>Status</span>
+					        <div class="dropdown-content">
+					            <!-- <form method="GET" action="http://localhost/college/index.php?mod=student&view=filter"> -->
+					                <input type="hidden" name="mod" value="student">
+					                <input type="hidden" name="view" value="filter">
+					                <select name="status" onchange="this.form.submit()">
+					                    <option value="">Select</option>
+					                    <option value="Active">Active</option>
+					                    <option value="Not Active">Not Active</option>
+					                </select>
+									<button type="submit">Filter</button>
+					            </form>
+					        </div>
+					    </div>
 					</th>
+
 					<th>
-						email
+						Email
 					</th>
 					<th>
 						

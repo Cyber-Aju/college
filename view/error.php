@@ -22,6 +22,10 @@
 <body>
     <div class="parent">
         <h1 align = "center"> not found </h1>
+        <form action="http://localhost/college/index.php" method="POST">
+            <button type="submit">Go Back!</button>
+        </form>
+        <?php header("Refresh:3;url=http://localhost/college/index.php");?>
     </div>
     
 </body>

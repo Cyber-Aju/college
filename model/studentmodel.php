@@ -100,7 +100,7 @@ class StudentModel extends Connection
 
     public function filter($gettedValues)
     {
-        // print_r($gettedValues);
+        print_r($gettedValues);
         // foreach($gettedValues as $key=>$value)
         {
             // $filter = $this->connect->query("SELECT * FROM student WHERE  ")->fetchAll(PDO::FETCH_ASSOC);
@@ -117,6 +117,44 @@ class StudentModel extends Connection
         // $filter = $this->connect->query("SELECT * FROM student WHERE department='{$gettedValues['department']}' || status='{$gettedValues['status']}'")->fetchAll(PDO::FETCH_ASSOC);
         return $filter;
     }
+
+        public function getFilteredStudents($department, $status,$first_name) {
+            // Start building the SQL query
+            $sql = "SELECT * FROM student WHERE 1=1";
+            
+            // Add department filter if it's selected
+            if (!empty($department)) {
+                $sql .= " AND department = :department";
+            }
+            
+            // Add status filter if it's selected
+            if (!empty($status)) {
+                $sql .= " AND status = :status";
+            }
+
+            if (!empty($first_name)) {
+                $sql .= " AND first_name = :first_name";
+            }
+            
+            // Prepare the SQL statement
+            $stmt = $this->connect->prepare($sql);
+            
+            // Bind the parameters based on the filters
+            if (!empty($department)) {
+                $stmt->bindParam(':department', $department);
+            }
+            if (!empty($status)) {
+                $stmt->bindParam(':status', $status);
+            }
+            if (!empty($first_name)) {
+                $stmt->bindParam(':first_name', $first_name);
+            }
+            
+            // Execute the query and fetch the results
+            $stmt->execute();
+            return $stmt->fetchAll();
+        }
+    
 
     #__call magic method to handle if invalid function called.
     public function __call($name, $arguments)

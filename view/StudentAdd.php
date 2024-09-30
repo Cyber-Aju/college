@@ -16,10 +16,10 @@
 	}
 	.parent
 	{
-        margin-top:500px;
+        #margin-top:500px;
 		width:1535px;
 		height:690px;
-		#background-color:#073763;
+		background-color:#073763;
 		position:absolute;
 	}
 	.formoutside form

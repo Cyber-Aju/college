@@ -19,7 +19,7 @@
 		height:690px;
 		background-color:#073763;
 		position:absolute;
-        margin-top:250px;
+        #margin-top:250px;
 	}
 	.child
 	{
@@ -43,7 +43,7 @@
 	.profile
 	{
 		float:left;
-		width:40%;
+		width:40%
 		height:40%;
 		#background-color:yellow;
         overflow:hidden;
