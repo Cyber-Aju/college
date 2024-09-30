@@ -121,6 +121,11 @@
 {
 	text-decoration: none;
 }
+.logout
+{
+	float:right;
+	padding-right:20px;
+}
 </style>
 </head>
 <body>
@@ -183,7 +188,7 @@
 						{$list[$key]['email']}
 					</td>
 					<td>
-						<span class='label other'>view &#x26F6;</span>
+						<a href='http://localhost/college/index.php?mod=student&view=studentview&student_id={$list[$key]['student_id']}' ><span class='label other'>view &#x26F6;</span></a>
 					</td>
 					<td>
 						<a class='edit' href='http://localhost/college/index.php?mod=student&view=studentEdit&student_id={$list[$key]['student_id']}'><span class='label other'>&#128393;</span></a>

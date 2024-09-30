@@ -143,24 +143,24 @@
         <input id="address" type="text" name="address" value="<?php echo "{$quer[0]['address']}"?>" required> <br><br>
 	</div>
 	<div class="status">
-        <label for="status">Status</label> 
-        <input id="status" type="radio" id="Active" name="status" value="Active" />
+        <label for="status">Status</label>
+        <input id="status" type="radio" id="Active" name="status" value="<?php echo "{$quer[0]['status']}"?>" />
         <label for="Active">Active</label>
-        <input type="radio" id="Not_Active" name="status" value="Not_active" />
+        <input type="radio" id="Not_Active" name="status" value="<?php echo "{$quer[0]['status']}"?>" />
         <label for="Not_Active">Not Active</label> <br><br>
 	</div>
 	<div class="gender">
         <label for="gender">Gender</label>
 		<select name="gender" id="gender">
-		  <option value="male">Male</option>
-		  <option value="female">Female</option>
+		  <option value="<?php echo "{$quer[0]['gender']}"?>">Male</option>
+		  <option value="<?php echo "{$quer[0]['gender']}"?>">Female</option>
 		</select><br><br>
 	</div>
     <div class="blood_grp">
         <label for="blood_group">Blood group</label>
 		<select name="blood_group" id="blood_group">
-		  <option value="B POSITIVE">B POSITIVE</option>
-		  <option value="A POSITIVE">A POSITIVE</option>
+		  <option value="<?php echo "{$quer[0]['blood_group']}"?>">B POSITIVE</option>
+		  <option value="<?php echo "{$quer[0]['blood_group']}"?>">A POSITIVE</option>
 		</select><br><br>
 	</div>
 	<div class="avatar">

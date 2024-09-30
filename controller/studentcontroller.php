@@ -21,7 +21,7 @@ class student
         $this->studentModelObj = new StudentModel;
         $this->parameter = $this->studentModelObj->studentList();
         session_start();
-        if (!isset($_SESSION['isAdminLoggedIn'])) {
+        if (!isset($_SESSION['isAdminLoggedIn'])) { //session false go to login
             header('Location: index.php?mod=admin&view=adminValidation');
             exit();
         }
@@ -56,6 +56,7 @@ class student
         $age = $age->y; 
         if (isset($_FILES['avatar']) && $_FILES['avatar']['error'] === 0) 
         {
+            print_r($_FILES);
             // Retrieve file information
             $file = $_FILES['avatar'];
             $student_id = 1; // Assume student_id is known (e.g., from session or form)
@@ -72,7 +73,7 @@ class student
             // Move the file to the target directory with the new name
             if (move_uploaded_file($file['tmp_name'], $targetFilePath)) {
                 $para = $this->studentModelObj->studentAdder($getValues, $targetFilePath, $age);
-            } else {
+            } else { 
                 echo "Error moving the uploaded file.";
             }
             // $para = $this->studentModelObj->studentAdder($getValues, $targetFilePath, $age);
@@ -112,6 +113,15 @@ class student
         $aa = $this->studentModelObj->filter($gettedValues);
         print_r($aa);
         // header("Refresh:2;url=http://localhost/college/index.php?mod=student&view=studentList");
+    }
+
+    public function studentview()
+    {
+        $getId = $_GET['student_id'];
+        // print_r($getId);
+        $viewQuer = $this->studentModelObj->particularShow($getId);
+        // print_r($viewQuer);
+        require('./view/view.php');
     }
 
     #__call magic method to handle if invalid function called. {Arguments: null,  returns : null}.
