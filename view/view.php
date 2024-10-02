@@ -7,126 +7,64 @@
 <meta name="Keywords" content="">
 <meta name="Description" content="">
 <title>Document</title>
+<link rel="stylesheet" href="./view/css/styles.css"/>
 <style>
-	body
-	{
-		margin:0px;
-		padding:0px;
-	}
-	.parent
-	{
-		width:1535px;
-		height:690px;
-		background-color:#073763;
-		position:absolute;
-        #margin-top:250px;
-	}
-	.child
-	{
-		width:40%;
-		height:80%;
-		background-color:white;
-		margin:50px auto;
-		padding:20px;
-		border-radius:10px;
-	}
-	.child p
-	{
-		
-		text-align:center;
-		font-size:20px;
-	}
-	.child div
-	{
-		padding:10px;
-	}
-	.profile
-	{
-		float:left;
-		width:40%
-		height:40%;
-		#background-color:yellow;
-        overflow:hidden;
-	}
-    .profile img
-    {
-        width:80%;
-        margin-left:25px;
-    }
-	.block 
-	{
-		width:40%;
-		float:left;
-	}
-	.otherdetails
-	{
-		width:40%;
-		float:left;
-	}
-	.academic
-	{
-		width:40%;
-		float:left;
-	}
-    .back
-    {
-        width:50%;
-        margin:0px auto;
-        float:bottom;
-    }
+	
 </style>
 </head>
 <body>
 <div class="parent">
 	<div class="child">
 		<p>Student Details </p>
+		<div>
 		<div class="profile">
-			<img src="<?php echo "{$viewQuer[0]['profile_image']}"?>">
+			<img src="<?php echo "{$viewQuer[0]['profile_image']}"?>" alt="" width=80 height=230>
 		</div>
-		<div class="block">Personal Details
+		<div class="personal"><span class="subhead">Personal Details</span>
 			<div class="sid">
 			Student Id : <?php echo $viewQuer[0]['student_id']?>
 			</div >
-			<div class="fname">
-				First Name : <?php echo $viewQuer[0]['first_name']?>
+			<div class="fnamev">
+				Name : <?php echo $viewQuer[0]['first_name']?> <?php echo $viewQuer[0]['last_name']?>
 			</div>
-			<div class="lname">
-				Last Name : <?php echo $viewQuer[0]['last_name']?>
-			</div>
-			<div>
+			<!-- <div class="lnamev">
+				Last Name : <?php //echo $viewQuer[0]['last_name']?>
+			</div> -->
+			<div class="agev">
 			Age : <?php echo $viewQuer[0]['age']?>
-			</div>
-			<div>
+			</div >
+			<div class="genderv">
 			Gender : <?php echo $viewQuer[0]['gender']?>
 			</div>
-			<div>
+			<div class="dobv">
 				DOB : <?php echo $viewQuer[0]['dob']?>
 			</div>
-		</div>
-		<div class="academic"> Academic information:
-		<div>
-			Department : <?php echo $viewQuer[0]['department']?>
-		</div>
-		<div>
-			Status : <?php echo $viewQuer[0]['status']?>
-		</div>
-		</div>
-		<div class="otherdetails"> Contact Information:
-		<div>
-			Email : <?php echo $viewQuer[0]['email']?>
-		</div>
-		<div>
-			Phone : <?php echo $viewQuer[0]['phone']?>
-		</div>
-		<div>
-			Address : <?php echo $viewQuer[0]['address']?>
-		</div>
-		<div>
+			<div class="blood_groupv">
 			Blood Group : <?php echo $viewQuer[0]['blood_group']?>
 		</div>
 		</div>
+	</div>
+		<div class="academic"> <span class="subhead">Academic information:</span>
+		<div class="departmentv">
+			Department : <?php echo $viewQuer[0]['department']?>
+		</div>
+		<div class="statusv">
+			Status : <?php echo $viewQuer[0]['status']?>
+		</div>
+		</div>
+		<div class="otherdetails"> <span class="subhead">Contact Information:</span>
+		<div class="emailv">
+			Email : <?php echo $viewQuer[0]['email']?>
+		</div>
+		<div class="phonev">
+			Phone : <?php echo $viewQuer[0]['phone']?>
+		</div>
+		<div class="addressv">
+			Address : <?php echo $viewQuer[0]['address']?>
+		</div>
+		</div>
         <div class="back">
-            <button><a href="http://localhost/college/index.php?mod=student&view=studentlist">Go back</a></button>
+            <a class="label other" href="http://localhost/college/index.php?mod=student&view=studentlist">Go back</a>
         </div>
 	</div>
 </div>

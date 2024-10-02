@@ -8,99 +8,10 @@
 <meta name="Keywords" content="">
 <meta name="Description" content="">
 <title>studentAdd</title>
+<link rel="stylesheet" href="./view/css/styles.css"/>
+
 <style>
-	body
-	{
-		margin:0px;
-		padding:0px;
-	}
-	.parent
-	{
-        #margin-top:500px;
-		width:1535px;
-		height:690px;
-		background-color:#073763;
-		position:absolute;
-	}
-	.formoutside form
-	{
-		background-color:white;
-		width:50%;
-		margin:0px auto;
-		padding:20px;
-	}
-	.formoutside p
-	{
-		text-align:center;
-		font-size:20px;
-	}
-	.forminside input
-	{
-		padding:8px;
-		width:300px;
-		margin-bottom:20px;
-	}
-	.forminside label
-	{
-		display:block;
-	}
-	.fname
-	{
-		width:50%;
-		float:left;
-	}
-	.lname
-	{
-		width:50%;
-		float:right;
-	}
-	.dept
-	{
-		width:50%;
-		float:left;
-	}
-	.email
-	{
-		width:50%;
-		float:right;
-	}
-	.phone
-	{
-		width:50%;
-		float:left;
-	}
-	.dob
-	{
-		width:50%;
-		float:right;
-	}
-	.address
-	{
-		width:50%;
-		float:left;
-	}
-	.gender
-	{
-		width:50%;
-		float:right;
-	}
-	.status
-	{
-		width:50%;
-		float:left;
-		display:inline;
-		padding:unset;
-		margin:unset;
-	}
-	.avatar
-	{
-		width:50%;
-		float:right;
-	}
-	.fclear
-	{
-		clear:both;
-	}
+	
 </style>
 </head>
 <body>
@@ -144,28 +55,35 @@
 	</div>
 	<div class="status">
         <label for="status">Status</label>
-        <input id="status" type="radio" id="Active" name="status" value="<?php echo "{$quer[0]['status']}"?>" />
-        <label for="Active">Active</label>
-        <input type="radio" id="Not_Active" name="status" value="<?php echo "{$quer[0]['status']}"?>" />
-        <label for="Not_Active">Not Active</label> <br><br>
+        <input style="width:20px;" type="radio" id="Active" name="status" value="Active" <?php if ($quer[0]['status'] == 'Active') echo 'checked'; ?> />
+        <label style="display:inline;" for="Active">Active</label>
+        <input style="width:20px;" type="radio" id="Not_Active" name="status" value="Not Active" <?php if ($quer[0]['status'] == 'Not Active') echo 'checked'; ?> />
+        <label style="display:inline;" for="Not_Active">Not Active</label> <br><br>
 	</div>
 	<div class="gender">
         <label for="gender">Gender</label>
 		<select name="gender" id="gender">
-		  <option value="<?php echo "{$quer[0]['gender']}"?>">Male</option>
-		  <option value="<?php echo "{$quer[0]['gender']}"?>">Female</option>
+		  <option value="Male" <?php if ($quer[0]['gender'] == 'Male') echo 'selected'; ?>>Male</option>
+		  <option value="Female" <?php if ($quer[0]['gender'] == 'Female') echo 'selected'; ?>>Female</option>
 		</select><br><br>
 	</div>
     <div class="blood_grp">
         <label for="blood_group">Blood group</label>
 		<select name="blood_group" id="blood_group">
-		  <option value="<?php echo "{$quer[0]['blood_group']}"?>">B POSITIVE</option>
-		  <option value="<?php echo "{$quer[0]['blood_group']}"?>">A POSITIVE</option>
+		  <option value="A POSITIVE" <?php if ($quer[0]['blood_group'] == 'A POSITIVE') echo 'selected'; ?>>A POSITIVE (A+)</option>
+		  <option value="A NEGATIVE" <?php if ($quer[0]['blood_group'] == 'A NEGATIVE') echo 'selected'; ?>>A NEGATIVE (A-)</option>
+		  <option value="B POSITIVE" <?php if ($quer[0]['blood_group'] == 'B POSITIVE') echo 'selected'; ?>>B POSITIVE (B+)</option>
+		  <option value="B NEGATIVE" <?php if ($quer[0]['blood_group'] == 'B NEGATIVE') echo 'selected'; ?>>B NEGATIVE (B-)</option>
+		  <option value="O POSITIVE" <?php if ($quer[0]['blood_group'] == 'O POSITIVE') echo 'selected'; ?>>O POSITIVE (O+)</option>
+		  <option value="O NEGATIVE" <?php if ($quer[0]['blood_group'] == 'O NEGATIVE') echo 'selected'; ?>>O NEGATIVE (O-)</option>
+		  <option value="AB POSITIVE" <?php if ($quer[0]['blood_group'] == 'AB POSITIVE') echo 'selected'; ?>>AB POSITIVE (AB+)</option>
+		  <option value="AB NEGATIVE" <?php if ($quer[0]['blood_group'] == 'AB NEGATIVE') echo 'selected'; ?>>AB NEGATIVE (AB-)</option>
 		</select><br><br>
 	</div>
 	<div class="avatar">
         <label for="avatar">Choose a profile picture:</label>
-        <input type="file" id="avatar" name="avatar" accept="image/png, image/jpeg" /> <br><br>
+		<img src="<?php echo $quer[0]['profile_image']; ?>" width=120 height=150>
+        <input type="file" id="avatar" name="avatar" accept="image/png, image/jpeg"/> <br><br>
         <input type="submit" name="submit"><br><br>
 	</div>
 	<div class="fclear">

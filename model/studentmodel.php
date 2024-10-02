@@ -45,22 +45,18 @@ class StudentModel extends Connection
         $checkValid = $insertQuery->execute();
         if($checkValid)
         {
-            // echo "Successfully " . $insertQuery->rowCount() . " Inserted in DB"; 
-            // // header("");
-            // header("Refresh:2;url=http://localhost/forms/formTaskRefactor/route.php?module=select");
+            return $insertQuery->rowCount();
         }
         else
         {
             echo "Failed to store in DB";
         }
-        return $insertQuery->rowCount();
+        
     }
 
     public function studentDelete($id)
     {
         $update = $this->connect->prepare("UPDATE student SET status='2' WHERE student_id=:id");
-        // $sid=$id;
-        // print_r($sid);
         $update->bindParam(':id',$id);
         $update->execute();
         return $update;
@@ -68,92 +64,87 @@ class StudentModel extends Connection
 
     public function studentEdit($uid)
     {
-        // print_r($uid);
         $quer = $this->particularShow($uid);
         return $quer;
     }
 
-    public function studentUpdate($gettedValues)
+    public function studentUpdate($gettedValues,$targetFilePath)
     {
+        print_r($gettedValues);
+        echo $targetFilePath;
         $student_id = $gettedValues['student_id'];
         $first_name = $gettedValues['first_name'];
         $last_name = $gettedValues['last_name'];
         $department=$gettedValues['department'];
         $email = $gettedValues['email'];
         $status=$gettedValues['status'];
-        $prepareEdit = $this->connect->prepare("UPDATE student SET first_name=:first_name, last_name=:last_name, department=:department, email=:email, status=:status WHERE student_id=:student_id");
+        $phone=$gettedValues['phone'];
+        $dob=$gettedValues['dob'];
+        $address=$gettedValues['address'];
+        $gender=$gettedValues['gender'];
+        $profile_image=$targetFilePath;
+        // $age=$gettedValues['age'];
+        $blood_group=$gettedValues['blood_group'];
+        $prepareEdit = $this->connect->prepare("UPDATE student SET first_name=:first_name, last_name=:last_name, department=:department, email=:email, status=:status,phone=:phone,dob=:dob,address=:address,gender=:gender,profile_image=:profile_image,blood_group=:blood_group WHERE student_id=:student_id");
         $prepareEdit->bindParam(':student_id',$student_id);
         $prepareEdit->bindParam(':first_name',$first_name);
         $prepareEdit->bindParam(':last_name',$last_name);
         $prepareEdit->bindParam(':department',$department);
         $prepareEdit->bindParam(':email',$email);
         $prepareEdit->bindParam(':status',$status);
+        $prepareEdit->bindParam(':phone',$phone);
+        $prepareEdit->bindParam(':dob',$dob);
+        $prepareEdit->bindParam(':address',$address);
+        $prepareEdit->bindParam(':gender',$gender);
+        $prepareEdit->bindParam(':profile_image',$profile_image);
+        // $prepareEdit->bindParam(':status',$age);
+        $prepareEdit->bindParam(':blood_group',$blood_group);
         $updatedStatus = $prepareEdit->execute();
         return $updatedStatus;
     }
 
     public function particularShow($id)
     {
-        $selectIdQuery = $this->connect->query("SELECT * FROM student WHERE student_id={$id}")->fetchAll(PDO::FETCH_ASSOC); //WHERE status='no'
+        $selectIdQuery = $this->connect->query("SELECT * FROM student WHERE student_id={$id}")->fetchAll(PDO::FETCH_ASSOC);
         return $selectIdQuery;
     }
 
-    public function filter($gettedValues)
+    public function getFilteredStudents($department, $status,$first_name) 
     {
-        print_r($gettedValues);
-        // foreach($gettedValues as $key=>$value)
-        {
-            // $filter = $this->connect->query("SELECT * FROM student WHERE  ")->fetchAll(PDO::FETCH_ASSOC);
-        }
-        if(($gettedValues['department']) && $gettedValues['status'])
-        {
-            $filter = $this->connect->query("SELECT * FROM student WHERE department='{$gettedValues['department']}' && status='{$gettedValues['status']}'")->fetchAll(PDO::FETCH_ASSOC);
-        }
-        else
-        {
-            // print_r($gettedValues);
-            $filter = $this->connect->query("SELECT * FROM student WHERE department='{$gettedValues['department']}' || status='{$gettedValues['status']}'")->fetchAll(PDO::FETCH_ASSOC);
-        }
-        // $filter = $this->connect->query("SELECT * FROM student WHERE department='{$gettedValues['department']}' || status='{$gettedValues['status']}'")->fetchAll(PDO::FETCH_ASSOC);
-        return $filter;
-    }
-
-        public function getFilteredStudents($department, $status,$first_name) {
-            // Start building the SQL query
-            $sql = "SELECT * FROM student WHERE 1=1";
-            
-            // Add department filter if it's selected
-            if (!empty($department)) {
-                $sql .= " AND department = :department";
-            }
-            
-            // Add status filter if it's selected
-            if (!empty($status)) {
-                $sql .= " AND status = :status";
-            }
-
-            if (!empty($first_name)) {
-                $sql .= " AND first_name = :first_name";
-            }
-            
-            // Prepare the SQL statement
-            $stmt = $this->connect->prepare($sql);
-            
-            // Bind the parameters based on the filters
-            if (!empty($department)) {
-                $stmt->bindParam(':department', $department);
-            }
-            if (!empty($status)) {
-                $stmt->bindParam(':status', $status);
-            }
-            if (!empty($first_name)) {
-                $stmt->bindParam(':first_name', $first_name);
-            }
-            
-            // Execute the query and fetch the results
-            $stmt->execute();
-            return $stmt->fetchAll();
-        }
+         // Start building the SQL query
+         $sql = "SELECT * FROM student WHERE 1=1";
+         
+         // Add department filter if it's selected
+         if (!empty($department)) {
+             $sql .= " AND department = :department";
+         }
+         
+         // Add status filter if it's selected
+         if (!empty($status)) {
+             $sql .= " AND status = :status";
+         }
+         if (!empty($first_name)) {
+             $sql .= " AND first_name = :first_name";
+         }
+         
+         // Prepare the SQL statement
+         $stmt = $this->connect->prepare($sql);
+         
+         // Bind the parameters based on the filters
+         if (!empty($department)) {
+             $stmt->bindParam(':department', $department);
+         }
+         if (!empty($status)) {
+             $stmt->bindParam(':status', $status);
+         }
+         if (!empty($first_name)) {
+             $stmt->bindParam(':first_name', $first_name);
+         }
+         
+         // Execute the query and fetch the results
+         $stmt->execute();
+         return $stmt->fetchAll();
+     }
     
 
     #__call magic method to handle if invalid function called.

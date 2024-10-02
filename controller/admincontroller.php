@@ -25,11 +25,22 @@ class admin
         else
         {
             session_start();
+            $timeout_duration = 1800;
+
+        if (isset($_SESSION['LAST_ACTIVITY']) && (time() - $_SESSION['LAST_ACTIVITY']) > $timeout_duration) {
+            // Last request was more than 30 minutes ago
+            session_unset(); // Unset session variables
+            session_destroy(); // Destroy the session
+        }
+        else if (time() - $_SESSION["LAST_ACTIVITY"] > 60) {
+            $_SESSION["LAST_ACTIVITY"] = time(); // update last activity time stamp
+        }
+        // $_SESSION['LAST_ACTIVITY'] = time();
             $adminName= (strstr($getValues['email'],'@',1));
             $_SESSION['adminLoggedBy'] = $adminName;
             $_SESSION['isAdminLoggedIn'] = true;
             header('Location: index.php?mod=student&view=studentlist');
-            
+            exit();
             // print_r($getValues);
             
             // print_r($adminName);
@@ -37,8 +48,13 @@ class admin
             // require('./controller/studentcontroller.php');
             // $studentObj = new Student;
             // $studentObj->studentList($adminName);
-            exit();
         }
+    }
+
+    public function login()
+    {
+        require('./view/login.php');
+        $this->adminvalidation();
     }
 
     public function logout()

@@ -3,7 +3,7 @@
   @author : Ajmal Akram S
   @created at : 25-09-2024
   @modified at : 26-09-2024
-*/
+*/ 
 
 class student
 {
@@ -25,7 +25,6 @@ class student
             header('Location: index.php?mod=admin&view=adminValidation');
             exit();
         }
-        // print_r($_SESSION);
     }
 
     public function studentList()
@@ -40,28 +39,12 @@ class student
         {
             echo "view not found";
         }
-        if(isset($_GET['status']))
-        {
-            $sts = $_GET['status'];
-            $grpQuer = $this->studentModelObj->particularShow($sts);
-        }
         return null;
     }
-
-    #inserting new values
-    public function studentAdd($request)
+    public function image($getValues)
     {
-        require("./view/StudentAdd.php");
-        $getValues = $_POST;
-        $dob = $getValues['dob'];
-        $dobDate = new DateTime($dob);
-        $now = new DateTime(); // Current date
-        // Calculate the difference
-        $age = $now->diff($dobDate);
-        $age = $age->y; 
         if (isset($_FILES['avatar']) && $_FILES['avatar']['error'] === 0) 
         {
-            print_r($_FILES);
             // Retrieve file information
             $file = $_FILES['avatar'];
             $student_id = 1; // Assume student_id is known (e.g., from session or form)
@@ -77,13 +60,49 @@ class student
 
             // Move the file to the target directory with the new name
             if (move_uploaded_file($file['tmp_name'], $targetFilePath)) {
-                $para = $this->studentModelObj->studentAdder($getValues, $targetFilePath, $age);
+                return $targetFilePath;
             } else { 
                 echo "Error moving the uploaded file.";
             }
-            // $para = $this->studentModelObj->studentAdder($getValues, $targetFilePath, $age);
-            // echo "$para";
         }
+    }
+    #inserting new values
+    public function studentAdd($request)
+    {
+        require("./view/StudentAdd.php");
+        $getValues = $_POST;
+        $dob = $getValues['dob'];
+        $dobDate = new DateTime($dob);
+        $now = new DateTime(); // Current date
+        // Calculate the difference
+        $age = $now->diff($dobDate);
+        $age = $age->y; 
+        $targetFilePath = $this->image($getValues);
+        // if (isset($_FILES['avatar']) && $_FILES['avatar']['error'] === 0) 
+        // {
+        //     // print_r($_FILES);
+        //     // Retrieve file information
+        //     $file = $_FILES['avatar'];
+        //     $student_id = 1; // Assume student_id is known (e.g., from session or form)
+        //     $student_name = $getValues['first_name']; // Retrieve the student's name (e.g., from database or form)
+
+        //     // Define the target directory
+        //     $targetDir = "./view/uploads/";
+
+        //     // Generate a new filename using student_id and student_name
+        //     $fileType = pathinfo($file['name'], PATHINFO_EXTENSION); // Get the file extension
+        //     $newFileName = $student_id . "_" . $student_name . "." . $fileType;
+        //     $targetFilePath = $targetDir . $newFileName;
+
+        //     // Move the file to the target directory with the new name
+        //     if (move_uploaded_file($file['tmp_name'], $targetFilePath)) {
+                $para = $this->studentModelObj->studentAdder($getValues, $targetFilePath, $age);
+        //     } else { 
+        //         echo "Error moving the uploaded file.";
+        //     }
+        //     // $para = $this->studentModelObj->studentAdder($getValues, $targetFilePath, $age);
+        //     // echo "$para";
+        // }
         // header("Refresh:2;url=http://localhost/college/index.php?mod=student&view=studentList");
         if (!$para)
         {
@@ -91,7 +110,8 @@ class student
         }
         else
         {
-            $this->studentList();
+            header("Refresh:2;url=http://localhost/college/index.php?mod=student&view=studentList");
+            exit();
         }
         return $para;
     }
@@ -99,9 +119,17 @@ class student
     public function studentDelete($request)
     {
         $id = $_GET['student_id'];
-        $this->studentModelObj->studentDelete($id);
+        $msg = $this->studentModelObj->studentDelete($id);
         // $this->studentList($request);
-        header("Refresh:2;url=http://localhost/college/index.php?mod=student&view=studentList");
+        if(!$msg)
+        {
+            echo "Not deleted";
+        }
+        else
+        {
+            header("Refresh:2;url=http://localhost/college/index.php?mod=student&view=studentList");
+            exit();
+        }
     }
 
     public function studentEdit($request)
@@ -111,36 +139,38 @@ class student
         require("view/StudentEdit.php");
     }
 
-    public function studentUpdate($request)
+    public function studentUpdate()
     {
         $gettedValues=$_POST;
-        $ho = $this->studentModelObj->studentUpdate($gettedValues);
-        // print_r($ho);
-        // $this->studentList($request);
-        header("Refresh:2;url=http://localhost/college/index.php?mod=student&view=studentList");
+        $targetFilePath = $this->image($gettedValues);
+        print_r($targetFilePath);
+        echo "$targetFilePath";
+        $msg = $this->studentModelObj->studentUpdate($gettedValues, $targetFilePath);
+        if(!$msg)
+        {
+            echo "Not updated";
+        }
+        else
+        {
+            header("Refresh:2;url=http://localhost/college/index.php?mod=student&view=studentList");
+            exit();
+        }
     }
 
     public function filter()
     {
-        // $gettedValues=$_POST;
         $department = isset($_GET['department']) ? $_GET['department'] : '';
         $status = isset($_GET['status']) ? $_GET['status'] : '';
         $first_name = isset($_GET['first_name']) ? $_GET['first_name'] : '';
         $list = $this->studentModelObj->getFilteredStudents($department,$status,$first_name);
-        // print_r($aa);
-        // session_start();
         $adminName = $_SESSION['adminLoggedBy'];
         require 'view/studentlist.php';
-        // $this->studentList();
-        // header("Refresh:2;url=http://localhost/college/index.php?mod=student&view=studentList");
     }
 
     public function studentview()
     {
         $getId = $_GET['student_id'];
-        // print_r($getId);
         $viewQuer = $this->studentModelObj->particularShow($getId);
-        // print_r($viewQuer);
         require('./view/view.php');
     }
 
