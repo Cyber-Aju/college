@@ -82,15 +82,15 @@
 					<th>
 						Email
 					</th>
-					<th>
+					<th colspan="3">
+						Actions
+					</th>
+					<!-- <th>
 						
 					</th>
 					<th>
 						
-					</th>
-					<th>
-						
-					</th>
+					</th> -->
 				<tr>
 			<?php
 			foreach ($list as $key=>$value)
@@ -122,7 +122,7 @@
 						<a class='yellowA' href='http://localhost/college/index.php?mod=student&view=studentview&student_id={$list[$key]['student_id']}' ><span class='label yellow'>View &#x26F6;</span></a>
 					</td>
 					<td>
-						<a class='edit' href='http://localhost/college/index.php?mod=student&view=studentEdit&student_id={$list[$key]['student_id']}'><span class='label blue'>&#128393;</span></a>
+						<a class='edit' id='edit' onmouseover='edit()' onmouseout()='editOut()' href='http://localhost/college/index.php?mod=student&view=studentEdit&student_id={$list[$key]['student_id']}'><span class='label blue'>&#128393;</span></a>
 						
 					</td>
 					<td>
@@ -136,5 +136,6 @@
 		
 	</div>
 </div>
+
 </body>
 </html>

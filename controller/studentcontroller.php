@@ -1,14 +1,17 @@
 <?php
-/*
-  @author : Ajmal Akram S
-  @created at : 25-09-2024
-  @modified at : 26-09-2024
-*/ 
 
 class student
 {
+    #handles session checks and loads the student model to fetch the student list.
     public function __construct()
     {
+        session_start();
+         #session false go to login
+        if (!isset($_SESSION['isAdminLoggedIn'])) 
+        {
+            header('Location: index.php?mod=admin&view=login');
+            exit();
+        }
         $model = "./model/studentmodel.php";
         if(file_exists($model))
         {
@@ -20,13 +23,9 @@ class student
         }
         $this->studentModelObj = new StudentModel;
         $this->parameter = $this->studentModelObj->studentList();
-        session_start();
-        if (!isset($_SESSION['isAdminLoggedIn'])) { //session false go to login
-            header('Location: index.php?mod=admin&view=adminValidation');
-            exit();
-        }
     }
 
+    #To display students
     public function studentList()
     {
         $list = $this->parameter;
@@ -41,110 +40,109 @@ class student
         }
         return null;
     }
+
+    #renaming images and ensured that moved in our desired path
     public function image($getValues)
     {
+        #checking image has any error and ensure that uploaded image's name
         if (isset($_FILES['avatar']) && $_FILES['avatar']['error'] === 0) 
         {
-            // Retrieve file information
             $file = $_FILES['avatar'];
-            $student_id = 1; // Assume student_id is known (e.g., from session or form)
-            $student_name = $getValues['first_name']; // Retrieve the student's name (e.g., from database or form)
-
-            // Define the target directory
+            $student_dept = $getValues['department']; 
+            $student_name = $getValues['first_name'];
             $targetDir = "./view/uploads/";
 
-            // Generate a new filename using student_id and student_name
-            $fileType = pathinfo($file['name'], PATHINFO_EXTENSION); // Get the file extension
-            $newFileName = $student_id . "_" . $student_name . "." . $fileType;
+            # generate a new filename using student_name
+            $fileType = pathinfo($file['name'], PATHINFO_EXTENSION);
+            $newFileName = $student_dept . "_" . $student_name . "." . $fileType;
             $targetFilePath = $targetDir . $newFileName;
 
-            // Move the file to the target directory with the new name
-            if (move_uploaded_file($file['tmp_name'], $targetFilePath)) {
+            # move the file to the target directory with the new name
+            if (move_uploaded_file($file['tmp_name'], $targetFilePath)) 
+            {
                 return $targetFilePath;
-            } else { 
+            }
+            else 
+            { 
                 echo "Error moving the uploaded file.";
             }
         }
     }
-    #inserting new values
+
+    #To add new students
     public function studentAdd($request)
     {
-        require("./view/StudentAdd.php");
-        $getValues = $_POST;
-        $dob = $getValues['dob'];
-        $dobDate = new DateTime($dob);
-        $now = new DateTime(); // Current date
-        // Calculate the difference
-        $age = $now->diff($dobDate);
-        $age = $age->y; 
-        $targetFilePath = $this->image($getValues);
-        // if (isset($_FILES['avatar']) && $_FILES['avatar']['error'] === 0) 
-        // {
-        //     // print_r($_FILES);
-        //     // Retrieve file information
-        //     $file = $_FILES['avatar'];
-        //     $student_id = 1; // Assume student_id is known (e.g., from session or form)
-        //     $student_name = $getValues['first_name']; // Retrieve the student's name (e.g., from database or form)
-
-        //     // Define the target directory
-        //     $targetDir = "./view/uploads/";
-
-        //     // Generate a new filename using student_id and student_name
-        //     $fileType = pathinfo($file['name'], PATHINFO_EXTENSION); // Get the file extension
-        //     $newFileName = $student_id . "_" . $student_name . "." . $fileType;
-        //     $targetFilePath = $targetDir . $newFileName;
-
-        //     // Move the file to the target directory with the new name
-        //     if (move_uploaded_file($file['tmp_name'], $targetFilePath)) {
-                $para = $this->studentModelObj->studentAdder($getValues, $targetFilePath, $age);
-        //     } else { 
-        //         echo "Error moving the uploaded file.";
-        //     }
-        //     // $para = $this->studentModelObj->studentAdder($getValues, $targetFilePath, $age);
-        //     // echo "$para";
-        // }
-        // header("Refresh:2;url=http://localhost/college/index.php?mod=student&view=studentList");
-        if (!$para)
+        if(file_exists("./view/StudentAdd.php"))
         {
-            echo "False";
+            require_once ("./view/StudentAdd.php");
+            $getValues = $_POST;
+
+            #calculate age via dob
+            $dob = $getValues['dob'];
+            $dobDate = new DateTime($dob);
+            $now = new DateTime();
+            $age = $now->diff($dobDate);
+            $age = $age->y;
+
+            #image handling through image function
+            $targetFilePath = $this->image($getValues);
+            $para = $this->studentModelObj->studentAdder($getValues, $targetFilePath, $age);
+            if (!$para)
+            {
+                echo "False";
+            }
+            else
+            {
+                header("Refresh:2;url=index.php?mod=student&view=studentList");
+                exit();
+            }
+            return $para;
         }
         else
         {
-            header("Refresh:2;url=http://localhost/college/index.php?mod=student&view=studentList");
-            exit();
+            echo "student add file is not included!";
         }
-        return $para;
     }
 
+    #to soft delete a student
     public function studentDelete($request)
     {
         $id = $_GET['student_id'];
         $msg = $this->studentModelObj->studentDelete($id);
-        // $this->studentList($request);
         if(!$msg)
         {
             echo "Not deleted";
         }
         else
         {
-            header("Refresh:2;url=http://localhost/college/index.php?mod=student&view=studentList");
+            header("Refresh:2;url=index.php?mod=student&view=studentList");
             exit();
         }
     }
 
+    #to interface the form to edit
     public function studentEdit($request)
     {
         $uid = $_GET['student_id'];
         $quer = $this->studentModelObj->particularShow($uid);
-        require("view/StudentEdit.php");
+        if(file_exists("view/StudentEdit.php"))
+        {
+            require_once ("view/StudentEdit.php");
+        }
+        else
+        {
+            echo "wrong view path";
+        }
     }
 
+    #updating value as in posted in the edit form
     public function studentUpdate()
     {
         $gettedValues=$_POST;
+
+        #image handling
         $targetFilePath = $this->image($gettedValues);
-        print_r($targetFilePath);
-        echo "$targetFilePath";
+
         $msg = $this->studentModelObj->studentUpdate($gettedValues, $targetFilePath);
         if(!$msg)
         {
@@ -152,11 +150,12 @@ class student
         }
         else
         {
-            header("Refresh:2;url=http://localhost/college/index.php?mod=student&view=studentList");
+            header("Refresh:2;url=index.php?mod=student&view=studentList");
             exit();
         }
     }
 
+    #Searcing name, filtering by status and department
     public function filter()
     {
         $department = isset($_GET['department']) ? $_GET['department'] : '';
@@ -164,14 +163,21 @@ class student
         $first_name = isset($_GET['first_name']) ? $_GET['first_name'] : '';
         $list = $this->studentModelObj->getFilteredStudents($department,$status,$first_name);
         $adminName = $_SESSION['adminLoggedBy'];
-        require 'view/studentlist.php';
+        if(file_exists('view/studentlist.php'))
+        {
+            require_once 'view/studentlist.php';
+        }
     }
 
+    #view a particular student
     public function studentview()
     {
         $getId = $_GET['student_id'];
         $viewQuer = $this->studentModelObj->particularShow($getId);
-        require('./view/view.php');
+        if(file_exists('./view/view.php'))
+        {
+            require_once('./view/view.php');
+        }
     }
 
     #__call magic method to handle if invalid function called. {Arguments: null,  returns : null}.

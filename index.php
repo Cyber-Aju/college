@@ -37,8 +37,6 @@ class MainController
                 ];
                 unset($data['mod'],$data['view']);
                 $datas['request_data']=$data;
-                // echo "<pre>";
-                // print_r($datas);
                 #returns model, view and data in the associate array format
                 $this->run_module($datas);
             }
@@ -49,7 +47,12 @@ class MainController
         }
         else
         {
-            require "view/login.php";
+            $datas=[
+                'model'=>"admin",
+                'controller'=>"admin",
+                'view'=>"login",
+            ];
+            $this->run_module($datas);
         }   
     }
 
@@ -97,5 +100,4 @@ class MainController
 $main=new MainController;
 $main->hook();
 // $absolutePath = dirname(__FILE__); echo $absolutePath;
-// PRINT_R($_SESSION);
 ?>

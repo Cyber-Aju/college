@@ -302,20 +302,13 @@ th:nth-child(3) {
 	}
 
 th:nth-child(4) {
-		width: 5%;
+		width: 8%;
 	}
 th:nth-child(5) {
-		width: 15%;
+		width: 22%;
 	}
 th:nth-child(6) {
-		width: 4%;
-	}
-th:nth-child(7) {
-		width: 3%;
-	}
-
-th:nth-child(8) {
-		width: 3%;
+		width: 22%;
 	}
 
 th,
@@ -346,7 +339,7 @@ td {
 .label {
 	display: inline;
 	padding: .2em .6em .3em;
-	font-size: 75%;
+	font-size: 95%;
 	font-weight: 700;
 	line-height: 1;
 	color: #fff;

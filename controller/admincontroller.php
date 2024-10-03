@@ -1,10 +1,10 @@
 <?php
-class admin
+class Admin
 {
+    #validate admin
     public function adminvalidation($request)
     {
         $getValues = $_POST;
-        // require('./model/adminmodel.php');
         $model = "./model/{$request['model']}" . "model.php";
         if(file_exists($model))
         {
@@ -16,8 +16,6 @@ class admin
         }
         $obj = new AdminModel;
         $validate = $obj->adminValidate($getValues);
-        // print_r($validate);
-        // echo "$validate";
         if(!$validate)
         {
             require('./view/error.php');
@@ -25,16 +23,16 @@ class admin
         else
         {
             session_start();
-            $timeout_duration = 1800;
+        //     $timeout_duration = 1800;
 
-        if (isset($_SESSION['LAST_ACTIVITY']) && (time() - $_SESSION['LAST_ACTIVITY']) > $timeout_duration) {
-            // Last request was more than 30 minutes ago
-            session_unset(); // Unset session variables
-            session_destroy(); // Destroy the session
-        }
-        else if (time() - $_SESSION["LAST_ACTIVITY"] > 60) {
-            $_SESSION["LAST_ACTIVITY"] = time(); // update last activity time stamp
-        }
+        // if (isset($_SESSION['LAST_ACTIVITY']) && (time() - $_SESSION['LAST_ACTIVITY']) > $timeout_duration) {
+        //     // Last request was more than 30 minutes ago
+        //     session_unset(); // Unset session variables
+        //     session_destroy(); // Destroy the session
+        // }
+        // else if (time() - $_SESSION["LAST_ACTIVITY"] > 60) {
+        //     $_SESSION["LAST_ACTIVITY"] = time(); // update last activity time stamp
+        // }
         // $_SESSION['LAST_ACTIVITY'] = time();
             $adminName= (strstr($getValues['email'],'@',1));
             $_SESSION['adminLoggedBy'] = $adminName;
@@ -59,17 +57,12 @@ class admin
 
     public function logout()
     {
-        // Start the session
         session_start();
-
-        // Unset all of the session variables
         $_SESSION = [];
-
-        // Destroy the session completely
         session_destroy();
 
-        // Redirect to the login page or any other page
-        header('Location: index.php');
+        #redirect to the login page
+        header('Location: index.php?mod=admin&view=login');
         exit();
     }
 }
