@@ -22,58 +22,58 @@ body
     </div>
 	<div class="list">
 		<div class="table">
-			<table border=0>
+		<?php
+			if(is_array($list) && !empty($list))
+			{ 
+			 echo "<table border=0>
 				<tr>
 					<th>
 						Id
 					</th>
 					<th>
-						<div class="dropdown">
+						<div class='dropdown'>
 						        <span>Student Name  &#x1F50D;</span>
-						        <div class="dropdown-content">
-						            <form method="GET" action="http://localhost/college/index.php?mod=student&view=filter">
-						                <input type="hidden" name="mod" value="student">
-						                <input type="hidden" name="view" value="filter">
-										<input type="text" name="first_name" placeholder=" &#x1F50D; Search Name">
-										<button type="submit">	Filter  </button>
-						            <!-- </form> -->
+						        <div class='dropdown-content'>
+						            <form method='POST' action='http://localhost/college/index.php?mod=student&view=filter'>
+						                <input type='hidden' name='mod' value='student'>
+						                <input type='hidden' name='view' value='filter'>
+										<input type='text' name='first_name' placeholder=' &#x1F50D; Search Name'>
+										<button type='submit'>	Filter  </button>
+
 						        </div>
 						    </div>
 					</th>
 					<th>
-					    <div class="dropdown">
+					    <div class='dropdown'>
 					        <span>Department  <select class='filterbtn'></select></span>
-					        <div class="dropdown-content">
-					            <!-- <form method="GET" action="http://localhost/college/index.php?mod=student&view=filter"> -->
-					                <input type="hidden" name="mod" value="student">
-					                <input type="hidden" name="view" value="filter">
-					                <select name="department" onchange=""> <!-- this.form.submit()--->
-					                    <option value="">Select</option>
-					                    <option value="CSE">CSE</option>
-					                    <option value="ECE">ECE</option>
-					                    <option value="EEE">EEE</option>
-					                    <option value="MECH">MECH</option>
-					                    <option value="IT">IT</option>
+					        <div class='dropdown-content'>
+					                <input type='hidden' name='mod' value='student'>
+					                <input type='hidden' name='view' value='filter'>
+					                <select name='department' onchange=''> <!-- this.form.submit()--->
+					                    <option value=''>Select</option>
+					                    <option value='CSE'>CSE</option>
+					                    <option value='ECE'E>ECE</option>
+					                    <option value='EEE'>EEE</option>
+					                    <option value='MECH'>MECH</option>
+					                    <option value='IT'>IT</option>
 					                </select>
-									<button type="submit">Filter</button>
-					            <!-- </form> -->
+									<button type='submit'>Filter</button>
 					        </div>
 					    </div>
 					</th>
 								
 					<th>
-					    <div class="dropdown">
+					    <div class='dropdown'>
 					        <span>Status <select class='filterbtn'></select></span>
-					        <div class="dropdown-content">
-					            <!-- <form method="GET" action="http://localhost/college/index.php?mod=student&view=filter"> -->
-					                <input type="hidden" name="mod" value="student">
-					                <input type="hidden" name="view" value="filter">
-					                <select name="status" onchange="this.form.submit()">
-					                    <option value="">Select</option>
-					                    <option value="Active">Active</option>
-					                    <option value="Not Active">Not Active</option>
+					        <div class='dropdown-content'>
+					                <input type='hidden' name='mod' value='student'>
+					                <input type='hidden' name='view' value='filter'>
+					                <select name='status'>
+					                    <option value=''>Select</option>
+					                    <option value='Active'>Active</option>
+					                    <option value='Not Active'>Not Active</option>
 					                </select>
-									<button type="submit">Filter</button>
+									<button type='submit'>Filter</button>
 					            </form>
 					        </div>
 					    </div>
@@ -82,7 +82,7 @@ body
 					<th>
 						Email
 					</th>
-					<th colspan="3">
+					<th colspan='3'>
 						Actions
 					</th>
 					<!-- <th>
@@ -91,8 +91,8 @@ body
 					<th>
 						
 					</th> -->
-				<tr>
-			<?php
+				<tr>";
+			
 			foreach ($list as $key=>$value)
 			{
 				echo "<tr>
@@ -130,39 +130,66 @@ body
 					</td>
 				<tr>";
             }
+		}
+			else
+			{ echo "<h2>No records found</h2>";}
 			?>
 			</table>
 
 
 			<?php if (ceil($total_pages / $num_results_on_page) > 0): ?>
-			<ul class="pagination">
-				<?php if ($page > 1): ?>
-				<li class="prev"><a href="index.php?mod=student&view=studentlist&page=<?php echo $page-1 ?>">Prev</a></li>
-				<?php endif; ?>
-				
-				<?php if ($page > 3): ?>
-				<li class="start"><a href="pagination.php?page=1">1</a></li>
-				<li class="dots">...</li>
-				<?php endif; ?>
-				
-				<?php if ($page-2 > 0): ?><li class="page"><a href="index.php?mod=student&view=studentlist&page=<?php echo $page-2 ?>"><?php echo $page-2 ?></a></li><?php endif; ?>
-				<?php if ($page-1 > 0): ?><li class="page"><a href="index.php?mod=student&view=studentlist&page=<?php echo $page-1 ?>"><?php echo $page-1 ?></a></li><?php endif; ?>
-				
-				<li class="currentpage"><a href="index.php?mod=student&view=studentlist&page=<?php echo $page ?>"><?php echo $page ?></a></li>
-				
-				<?php if ($page+1 < ceil($total_pages / $num_results_on_page)+1): ?><li class="page"><a href="index.php?mod=student&view=studentlist&page=<?php echo $page+1 ?>"><?php echo $page+1 ?></a></li><?php endif; ?>
-				<?php if ($page+2 < ceil($total_pages / $num_results_on_page)+1): ?><li class="page"><a href="index.php?mod=student&view=studentlist&page=<?php echo $page+2 ?>"><?php echo $page+2 ?></a></li><?php endif; ?>
-				
-				<?php if ($page < ceil($total_pages / $num_results_on_page)-2): ?>
-				<li class="dots">...</li>
-				<li class="end"><a href="index.php?mod=student&view=studentlist&page=<?php echo ceil($total_pages / $num_results_on_page) ?>"><?php echo ceil($total_pages / $num_results_on_page) ?></a></li>
-				<?php endif; ?>
-				
-				<?php if ($page < ceil($total_pages / $num_results_on_page)): ?>
-				<li class="next"><a href="index.php?mod=student&view=studentlist&page=<?php echo $page+1 ?>">Next</a></li>
-				<?php endif; ?>
-			</ul>
-			<?php endif; ?>
+    <ul class="pagination">
+        <?php
+        // print_r($_GET); // Debugging line to check GET parameters
+        
+        // Base URL for pagination links
+        $base_url = "index.php?mod=student&view=" . ($_GET['view'] === 'filter' ? 'filter' : 'studentlist');
+
+        // Previous Page Link
+        if ($page > 1): ?>
+            <li class="prev">
+                <a href="<?php echo $base_url; ?>&page=<?php echo $page - 1; ?>">Prev</a>
+            </li>
+        <?php endif; ?>
+
+        <!-- Starting page link -->
+        <?php if ($page > 3): ?>
+            <li class="start"><a href="<?php echo $base_url; ?>&page=1">1</a></li>
+            <li class="dots">...</li>
+        <?php endif; ?>
+
+        <!-- Previous Page Links -->
+        <?php if ($page - 2 > 0): ?>
+            <li class="page"><a href="<?php echo $base_url; ?>&page=<?php echo $page - 2; ?>"><?php echo $page - 2; ?></a></li>
+        <?php endif; ?>
+        <?php if ($page - 1 > 0): ?>
+            <li class="page"><a href="<?php echo $base_url; ?>&page=<?php echo $page - 1; ?>"><?php echo $page - 1; ?></a></li>
+        <?php endif; ?>
+
+        <!-- Current Page -->
+        <li class="currentpage"><a href="<?php echo $base_url; ?>&page=<?php echo $page; ?>"><?php echo $page; ?></a></li>
+
+        <!-- Next Page Links -->
+        <?php if ($page + 1 < ceil($total_pages / $num_results_on_page) + 1): ?>
+            <li class="page"><a href="<?php echo $base_url; ?>&page=<?php echo $page + 1; ?>"><?php echo $page + 1; ?></a></li>
+        <?php endif; ?>
+        <?php if ($page + 2 < ceil($total_pages / $num_results_on_page) + 1): ?>
+            <li class="page"><a href="<?php echo $base_url; ?>&page=<?php echo $page + 2; ?>"><?php echo $page + 2; ?></a></li>
+        <?php endif; ?>
+
+        <!-- Ending page link -->
+        <?php if ($page < ceil($total_pages / $num_results_on_page) - 2): ?>
+            <li class="dots">...</li>
+            <li class="end"><a href="<?php echo $base_url; ?>&page=<?php echo ceil($total_pages / $num_results_on_page); ?>"><?php echo ceil($total_pages / $num_results_on_page); ?></a></li>
+        <?php endif; ?>
+
+        <!-- Next Page Link -->
+        <?php if ($page < ceil($total_pages / $num_results_on_page)): ?>
+            <li class="next"><a href="<?php echo $base_url; ?>&page=<?php echo $page + 1; ?>">Next</a></li>
+        <?php endif; ?>
+    </ul>
+<?php endif; ?>
+
 		</div>
 		
 	</div>

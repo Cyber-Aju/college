@@ -206,10 +206,31 @@ class student
     #Searcing name, filtering by status and department
     public function filter()
     {
-        $department = isset($_GET['department']) ? $_GET['department'] : '';
-        $status = isset($_GET['status']) ? $_GET['status'] : '';
-        $first_name = isset($_GET['first_name']) ? $_GET['first_name'] : '';
-        $list = $this->studentModelObj->getFilteredStudents($department,$status,$first_name);
+        // $all= $this->studentModelObj->studentlistPagination();
+        // print_r($all);
+        // $list = $all['result'];
+        // $total_pages = $all['total_pages'];
+        // print_r($total_pages);
+        // $page = $all['page'];
+        // print_r($page);
+        // $num_results_on_page = $all['num_results_on_page'];
+        // $total_pages = $this->studentModelObj->getTotalFilteredRecords();
+
+
+        
+        // $page = isset($_GET['page']) && is_numeric($_GET['page']) ? $_GET['page'] : 1;
+        $department = isset($_POST['department']) ? $_POST['department'] : '';
+        $status = isset($_POST['status']) ? $_POST['status'] : '';
+        $first_name = isset($_POST['first_name']) ? $_POST['first_name'] : '';
+        $all = $this->studentModelObj->getFilteredStudents($department,$status,$first_name);
+        // print_r($all);
+        $list = $all['result'];
+        $total_pages = $all['total_pages'];
+        // print_r($total_pages);
+        $page = $all['page'];
+        // print_r($page);
+        $num_results_on_page = $all['num_results_on_page'];
+        
         $adminName = $_SESSION['adminLoggedBy'];
         if(file_exists('view/studentlist.php'))
         {

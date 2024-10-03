@@ -317,7 +317,12 @@ class StudentModel extends Connection
             // $getAll .= " && p.first_name LIKE ':first_name%'";
         }
 
-        $stmt = $this->connect->prepare($getAll);
+        $getAll .= " LIMIT :limit OFFSET :offset";
+
+        $stmt = $this->connect->prepare($getAll);  
+
+
+        // $stmt = $this->connect->prepare($getAll);
 
         if (!empty($department)) {
             $stmt->bindParam(':department', $department);
@@ -330,10 +335,55 @@ class StudentModel extends Connection
             $first_name =$first_name . '%';
             $stmt->bindParam(':first_name',$first_name);
         }
+        $page = 1;
+        $num_results_on_page = 5;
 
+        $calc_page = ($page - 1) * $num_results_on_page;
+        // $total_pages = $this->connect->query('SELECT COUNT(*) FROM personal')->fetch()[0];
+        // $page = isset($_GET['page']) && is_numeric($_GET['page']) ? $_GET['page'] : 1;
+        // $num_results_on_page = 5;
+        $stmt->bindParam(':limit', $num_results_on_page, PDO::PARAM_INT);
+        $stmt->bindParam(':offset', $calc_page, PDO::PARAM_INT);
+    
         $stmt->execute();
-         return $stmt->fetchAll(PDO::FETCH_ASSOC);
+        $total_pages = $this->getTotalFilteredRecords($department, $status, $first_name);
+         $result =  $stmt->fetchAll(PDO::FETCH_ASSOC);
+        //  print_r($result);
+         $all = array('total_pages'=>$total_pages,'page'=>$page,'num_results_on_page'=>$num_results_on_page,'result'=>$result);
+        return $all;
     }
+
+
+    public function getTotalFilteredRecords($department, $status, $first_name)
+{
+    $getAll = "SELECT COUNT(*) as total FROM personal p JOIN academic a ON p.student_id = a.student_id WHERE 1=1 ";
+
+    if (!empty($department)) {
+        $getAll .= " AND a.department = :department";
+    }
+    if (!empty($status)) {
+        $getAll .= " AND a.status = :status";
+    }
+    if (!empty($first_name)) {
+        $getAll .= " AND p.first_name LIKE :first_name";
+        $first_name .= '%';
+    }
+
+    $stmt = $this->connect->prepare($getAll);
+
+    if (!empty($department)) {
+        $stmt->bindParam(':department', $department);
+    }
+    if (!empty($status)) {
+        $stmt->bindParam(':status', $status);
+    }
+    if (!empty($first_name)) {
+        $stmt->bindParam(':first_name', $first_name);
+    }
+
+    $stmt->execute();
+    return $stmt->fetchColumn(); // Return total count
+}
 
     
     #__call magic method to handle if invalid function called.
