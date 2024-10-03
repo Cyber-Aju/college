@@ -1,10 +1,3 @@
-// function edit() {
-//   document.getElementById("edit").innerHTML = "Edit";
-// }
-
-// function editOut() {
-//   document.getElementById("edit").innerHTML = "&#128393;";
-// }
 function logout() {
   if (confirm("Are you sure you want to logout?") == true) {
     return true;
@@ -27,4 +20,9 @@ function deleteStudent() {
   } else {
     return false;
   }
+}
+
+function back() {
+  window.location.href =
+    "http://localhost/college/index.php?mod=student&view=studentList";
 }

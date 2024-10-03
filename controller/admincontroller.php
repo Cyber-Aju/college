@@ -3,90 +3,70 @@ class Admin
 {
     public function __construct()
     {
-        $model = "./model/adminmodel.php";
-        if(file_exists($model))
-        {
-            require($model);
-            $this->obj = new AdminModel;
+        $adminModelPath = "./model/adminmodel.php";
+        if (file_exists($adminModelPath)) {
+            require_once($adminModelPath);
+            $this->adminModelObj = new AdminModel;
         }
     }
 
     public function adminadd()
     {
-        require_once('./view/signup.php');
-        $getAdminValues = $_POST;
-        print_r($getAdminValues);
-        $add = $this->obj->adminadd($getValues);
-
+        if (file_exists('./view/signup.php')) {
+            require_once('./view/signup.php');
+        }
+        $adminValues = $_POST;
+        $add = $this->adminModelObj->adminadd($getValues);
     }
 
-    #validate admin
+    /**
+     * validate admin through email and hashed password
+     * @return void
+     */
     public function adminvalidation()
     {
         $getValues = $_POST;
-        $validate = $this->obj->adminValidate($getValues);
-        // $validate = $this->validate;
-            if(!$validate)
-            {
-                require('./view/error.php');
-            }
-            else
-            {
-                session_start();
-                $adminName= (strstr($getValues['email'],'@',1));
-                $_SESSION['adminLoggedBy'] = $adminName;
-                $_SESSION['isAdminLoggedIn'] = true;
-                header('Location: index.php?mod=student&view=studentlist');
-                exit();
-            //     $timeout_duration = 1800;
+        $isValid = $this->adminModelObj->adminValidate($getValues);
+        if (!$isValid) {
+            require_once('./view/error.php');
+        } else {
+            session_start();
+            $adminName = (strstr($getValues['email'], '@', 1));
+            $_SESSION['adminLoggedBy'] = $adminName;
+            $_SESSION['isAdminLoggedIn'] = true;
+            header('Location: index.php?mod=student&view=studentlist');
+            exit();
 
-            // if (isset($_SESSION['LAST_ACTIVITY']) && (time() - $_SESSION['LAST_ACTIVITY']) > $timeout_duration) {
-            //     // Last request was more than 30 minutes ago
-            //     session_unset(); // Unset session variables
-            //     session_destroy(); // Destroy the session
-            // }
-            // else if (time() - $_SESSION["LAST_ACTIVITY"] > 60) {
-            //     $_SESSION["LAST_ACTIVITY"] = time(); // update last activity time stamp
-            // }
-            // $_SESSION['LAST_ACTIVITY'] = time();
-                
-                // print_r($getValues);
-
-                // print_r($adminName);
-                // header("Refresh:2;url=http://localhost/college/index.php?mod=student&view=studentlist");
-                // require('./controller/studentcontroller.php');
-                // $studentObj = new Student;
-                // $studentObj->studentList($adminName);
-            
         }
-        // else
-        // {
-        //     echo "Folder not found!";
-        // }
     }
 
+    /**
+     * Function to intiate process & handling admin login
+     * @return void
+     */
     public function login()
     {
         require('./view/login.php');
         session_start();
-        if(isset($_POST['email']) && (isset($_POST['password'])))
-        {
+        if (isset($_POST['email']) && (isset($_POST['password']))) {
             $this->adminvalidation();
-        }
-        else if(isset($_SESSION['isAdminLoggedIn']))
-        {
+        } else if (isset($_SESSION['isAdminLoggedIn'])) {
             header('Location: index.php?mod=student&view=studentlist');
             exit();
         }
     }
 
+    /**
+     * Logouts from the session
+     * @return never
+     */
     public function logout()
     {
         session_start();
         $_SESSION = [];
         session_destroy();
 
-        #redirect to the login page
+        //redirect to the login page
         header('Location: index.php?mod=admin&view=login');
         exit();
     }
