@@ -16,6 +16,37 @@ class StudentModel extends Connection
         $this->connect = $this->connect();
     }
 
+    public function studentlistPagination()
+    {
+        // Get the total number of records from our table "students".
+        $total_pages = $this->connect->query('SELECT COUNT(*) FROM personal')->fetch()[0];
+        // echo "total_pages:";
+        // print_r($total_pages);
+        // Check if the page number is specified and check if it's a number, if not return the default page number which is 1.
+        $page = isset($_GET['page']) && is_numeric($_GET['page']) ? $_GET['page'] : 1;
+        // echo "page";
+        // print_r($page);
+        // Number of results to show on each page.
+        $num_results_on_page = 5;
+
+
+        if ($stmt = $this->connect->prepare('SELECT * FROM personal p JOIN academic a ON p.student_id = a.student_id JOIN contact c ON p.student_id = c.student_id LIMIT :limitt OFFSET :offset')) {
+            // Calculate the page to get the results we need from our table.
+            $calc_page = ($page - 1) * $num_results_on_page;
+            $stmt->bindParam(':offset', $calc_page, PDO::PARAM_INT);
+            $stmt->bindParam(':limitt', $num_results_on_page, PDO::PARAM_INT);
+            $stmt->execute(); 
+            // Get the results...
+            // $result = $stmt->get_result();
+            $result = $stmt->fetchAll(PDO::FETCH_ASSOC);
+            // require('./view/studentlist.php');
+            // print_r($result);
+            // return $result;
+            $all = array('total_pages'=>$total_pages,'page'=>$page,'num_results_on_page'=>$num_results_on_page,'result'=>$result);
+            return $all;
+            // $stmt->close();
+        }
+    }
     #fetch students from student table
     public function studentlist()
     {
@@ -108,13 +139,11 @@ class StudentModel extends Connection
     }
 
 
-    public function studentUpdate($gettedValues, $targetFilePath)
+    public function studentUpdate($gettedValues, $targetFilePath, $age)
     {
         $student_id = $gettedValues['student_id'];
-
         try {
             // $this->connect->beginTransaction();
-
             #updating personal table
             $personalQuery = $this->connect->prepare("
                 UPDATE personal 
@@ -122,15 +151,17 @@ class StudentModel extends Connection
                     last_name = :last_name, 
                     age = :age, 
                     gender = :gender,
-                    profile_image = :profile_image, 
+                    profile_image = :profile_image,
                     dob = :dob, 
                     blood_group = :blood_group
                 WHERE student_id = :student_id
             ");
+            print_r($personalQuery);
             $personalQuery->bindParam(':first_name', $gettedValues['first_name']);
             $personalQuery->bindParam(':last_name', $gettedValues['last_name']);
-            $personalQuery->bindParam(':age', $gettedValues['age']);
+            $personalQuery->bindParam(':age', $age);
             $personalQuery->bindParam(':gender', $gettedValues['gender']);
+            // $targetFilePath!=NULL ? $personalQuery->bindParam(':profile_image', $targetFilePath):'';
             $personalQuery->bindParam(':profile_image', $targetFilePath);
             $personalQuery->bindParam(':dob', $gettedValues['dob']);
             $personalQuery->bindParam(':blood_group', $gettedValues['blood_group']);
@@ -234,6 +265,24 @@ class StudentModel extends Connection
     //      return $stmt->fetchAll();
     //  }
 
+
+//     public function filterStudents($filterPost) {
+//         $connect = $this->ConnectionFuncion();
+//         $filters = [];
+//         $sqlquery = "select * from student where active_status = 'yes'";
+//         if (!empty($filterPost)) {
+//             foreach ($filterPost as $key => $value) {
+//                 if (!empty($value)) {
+//                     $sqlquery .= " AND $key = :$key";
+//                     $filters[$key] = $value;
+//                 }
+//             }
+//         }
+//         $filterStatement = $connect->prepare($sqlquery);
+//         $filterStatement->execute($filters);
+//         return $filterStatement->fetchAll();
+//         }
+
     public function getFilteredStudents($department, $status, $first_name) 
     {
         $getAll = "
@@ -254,17 +303,18 @@ class StudentModel extends Connection
             FROM personal p
             JOIN contact c ON p.student_id = c.student_id
             JOIN academic a ON p.student_id = a.student_id
-            WHERE 1=1
+            WHERE 1=1 
         ";
 
         if (!empty($department)) {
-            $getAll .= " AND a.department = :department";
+            $getAll .= " && a.department = :department";
         }
         if (!empty($status)) {
-            $getAll .= " AND a.status = :status";
+            $getAll .= " && a.status = :status";
         }
         if (!empty($first_name)) {
-            $getAll .= " AND p.first_name = :first_name";
+            $getAll .= " && p.first_name LIKE :first_name";
+            // $getAll .= " && p.first_name LIKE ':first_name%'";
         }
 
         $stmt = $this->connect->prepare($getAll);
@@ -276,11 +326,13 @@ class StudentModel extends Connection
             $stmt->bindParam(':status', $status);
         }
         if (!empty($first_name)) {
-            $stmt->bindParam(':first_name', $first_name);
+            // $a = $first_name;
+            $first_name =$first_name . '%';
+            $stmt->bindParam(':first_name',$first_name);
         }
 
         $stmt->execute();
-        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+         return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
 
     

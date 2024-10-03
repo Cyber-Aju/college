@@ -80,10 +80,11 @@
 		  <option value="AB NEGATIVE" <?php if ($quer[0]['blood_group'] == 'AB NEGATIVE') echo 'selected'; ?>>AB NEGATIVE (AB-)</option>
 		</select><br><br>
 	</div>
-	<div class="avatar">
+	<div class="avataredit">
         <label for="avatar">Choose a profile picture:</label>
 		<img src="<?php echo $quer[0]['profile_image']; ?>" width=120 height=150>
-        <input type="file" id="avatar" name="avatar" accept="image/png, image/jpeg" required/> <br><br>
+		<input type="hidden" id="profile" name="profile" value="<?php echo $quer[0]['profile_image']; ?>">
+        <input type="file" id="avatar" name="avatar" accept="image/png, image/jpeg" /> <br><br>
         <input type="submit" name="submit"><br><br>
 	</div>
 	<div class="fclear">

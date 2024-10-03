@@ -64,14 +64,14 @@
 	</div>
 	<div class="gender">
         <label for="gender">Gender</label>
-		<select name="gender" id="gender">
+		<select name="gender" id="gender" class="selectData">
 		  <option value="male">Male</option>
 		  <option value="female">Female</option>
 		</select><br><br>
 	</div>
     <div class="blood_grp">
         <label for="blood_group">Blood group</label>
-		<select name="blood_group" id="blood_group">
+		<select name="blood_group" id="blood_group" class="selectData">
 		<option value="A POSITIVE">A POSITIVE (A+)</option>
 		  <option value="A NEGATIVE" >A NEGATIVE (A-)</option>
 		  <option value="B POSITIVE" >B POSITIVE (B+)</option>

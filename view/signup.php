@@ -15,10 +15,10 @@
 	<div class="form">
 		<div class="formHeader">
 			<!-- <img src="./view/img/loginheader1.png"> -->
-			 <p>Admin Login</p>
+			 <p>Admin signup</p>
 		</div>
 		<div class="formBody">
-			<form method="POST" action="http://localhost/college/index.php?mod=admin&view=adminvalidation">
+			<form method="POST" action="http://localhost/college/index.php?mod=admin&view=login">
 				<label for="email"  >Email</label><br>
 				<input id="email "type="email" name="email" maxlength="30" required> <br>
 				<label for="password">Password</label><br>

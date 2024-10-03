@@ -9,14 +9,14 @@
 <title>Document</title>
 <link rel="stylesheet" href="./view/css/styles.css"/>
 <style>
-body
-{
-	background-color:white;
-}
+	
 </style>
 </head>
 <body>
 <div class="parentlist">
+    <?php echo "<h2>Welcome back <span class='adminname'> {$adminName} </span></h2>"; ?>
+	
+    <div class="logout"><a onClick = 'return logout()' href='http://localhost/college/index.php?mod=admin&view=logout'><span class="label other">Logout</span></a></div>
 	<div class="insert">
        <a class='yellowA' href="http://localhost/college/index.php?mod=student&view=studentAdd"><span class="label other">Add Student</span></a>
     </div>
@@ -29,20 +29,20 @@ body
 					</th>
 					<th>
 						<div class="dropdown">
-						        <span>Student Name  &#x1F50D;</span>
+						        <span>Student Name</span>
 						        <div class="dropdown-content">
 						            <form method="GET" action="http://localhost/college/index.php?mod=student&view=filter">
 						                <input type="hidden" name="mod" value="student">
 						                <input type="hidden" name="view" value="filter">
 										<input type="text" name="first_name" placeholder=" &#x1F50D; Search Name">
-										<button type="submit">	Filter  </button>
+										<button type="submit"><span class="label other">  	Filter  </span></button>
 						            <!-- </form> -->
 						        </div>
 						    </div>
 					</th>
 					<th>
 					    <div class="dropdown">
-					        <span>Department  <select class='filterbtn'></select></span>
+					        <span>Department</span>
 					        <div class="dropdown-content">
 					            <!-- <form method="GET" action="http://localhost/college/index.php?mod=student&view=filter"> -->
 					                <input type="hidden" name="mod" value="student">
@@ -55,7 +55,7 @@ body
 					                    <option value="MECH">MECH</option>
 					                    <option value="IT">IT</option>
 					                </select>
-									<button type="submit">Filter</button>
+									<button type="submit"><span class="label other">Filter</span></button>
 					            <!-- </form> -->
 					        </div>
 					    </div>
@@ -63,7 +63,7 @@ body
 								
 					<th>
 					    <div class="dropdown">
-					        <span>Status <select class='filterbtn'></select></span>
+					        <span>Status</span>
 					        <div class="dropdown-content">
 					            <!-- <form method="GET" action="http://localhost/college/index.php?mod=student&view=filter"> -->
 					                <input type="hidden" name="mod" value="student">
@@ -73,7 +73,7 @@ body
 					                    <option value="Active">Active</option>
 					                    <option value="Not Active">Not Active</option>
 					                </select>
-									<button type="submit">Filter</button>
+									<button type="submit"><span class="label other">Filter</span></button>
 					            </form>
 					        </div>
 					    </div>
@@ -132,37 +132,6 @@ body
             }
 			?>
 			</table>
-
-
-			<?php if (ceil($total_pages / $num_results_on_page) > 0): ?>
-			<ul class="pagination">
-				<?php if ($page > 1): ?>
-				<li class="prev"><a href="index.php?mod=student&view=studentlist&page=<?php echo $page-1 ?>">Prev</a></li>
-				<?php endif; ?>
-				
-				<?php if ($page > 3): ?>
-				<li class="start"><a href="pagination.php?page=1">1</a></li>
-				<li class="dots">...</li>
-				<?php endif; ?>
-				
-				<?php if ($page-2 > 0): ?><li class="page"><a href="index.php?mod=student&view=studentlist&page=<?php echo $page-2 ?>"><?php echo $page-2 ?></a></li><?php endif; ?>
-				<?php if ($page-1 > 0): ?><li class="page"><a href="index.php?mod=student&view=studentlist&page=<?php echo $page-1 ?>"><?php echo $page-1 ?></a></li><?php endif; ?>
-				
-				<li class="currentpage"><a href="index.php?mod=student&view=studentlist&page=<?php echo $page ?>"><?php echo $page ?></a></li>
-				
-				<?php if ($page+1 < ceil($total_pages / $num_results_on_page)+1): ?><li class="page"><a href="index.php?mod=student&view=studentlist&page=<?php echo $page+1 ?>"><?php echo $page+1 ?></a></li><?php endif; ?>
-				<?php if ($page+2 < ceil($total_pages / $num_results_on_page)+1): ?><li class="page"><a href="index.php?mod=student&view=studentlist&page=<?php echo $page+2 ?>"><?php echo $page+2 ?></a></li><?php endif; ?>
-				
-				<?php if ($page < ceil($total_pages / $num_results_on_page)-2): ?>
-				<li class="dots">...</li>
-				<li class="end"><a href="index.php?mod=student&view=studentlist&page=<?php echo ceil($total_pages / $num_results_on_page) ?>"><?php echo ceil($total_pages / $num_results_on_page) ?></a></li>
-				<?php endif; ?>
-				
-				<?php if ($page < ceil($total_pages / $num_results_on_page)): ?>
-				<li class="next"><a href="index.php?mod=student&view=studentlist&page=<?php echo $page+1 ?>">Next</a></li>
-				<?php endif; ?>
-			</ul>
-			<?php endif; ?>
 		</div>
 		
 	</div>

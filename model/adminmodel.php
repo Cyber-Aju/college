@@ -32,5 +32,15 @@ class AdminModel extends Connection
         }
         $connecting = null;
     }
+    public function adminAdd($getAdminValues)
+    {
+        print_r($getAdminValues);
+        $adminAdd = $this->connect->prepare("INSERT INTO admin (email,password) VALUES (:email,:password)");
+        $adminAdd->bindParam(':email',$getAdminValues['email']);
+        $password = password_hash($getAdminValues['password'], PASSWORD_BCRYPT);
+        print_r($password);
+        $adminAdd->bindParam(':password',$password);
+        $adminAdd->execute();
+    }
 }
 ?>

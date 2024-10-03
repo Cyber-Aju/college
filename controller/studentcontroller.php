@@ -12,6 +12,13 @@ class student
             header('Location: index.php?mod=admin&view=login');
             exit();
         }
+        // else
+        // {
+        //     header('Location: index.php?mod=admin&view=adminvalidation');
+        //     exit();
+        // }
+        $adminName = $_SESSION['adminLoggedBy'];
+        require_once('./common/header.php');
         $model = "./model/studentmodel.php";
         if(file_exists($model))
         {
@@ -25,13 +32,18 @@ class student
         $this->parameter = $this->studentModelObj->studentList();
     }
 
-    #To display students
     public function studentList()
     {
-        $list = $this->parameter;
+        $all= $this->studentModelObj->studentlistPagination();
+        // print_r($all);
+        $list = $all['result'];
+        $total_pages = $all['total_pages'];
+        // print_r($total_pages);
+        $page = $all['page'];
+        // print_r($page);
+        $num_results_on_page = $all['num_results_on_page'];
         if(is_array($list) && file_exists("./view/studentlist.php") )
         {
-            $adminName = $_SESSION['adminLoggedBy'];
             require("./view/studentlist.php");
         }
         else
@@ -40,6 +52,22 @@ class student
         }
         return null;
     }
+
+    // #To display students
+    // public function studentList()
+    // {
+    //     $list = $this->parameter;
+    //     if(is_array($list) && file_exists("./view/studentlist.php") )
+    //     {
+    //         $adminName = $_SESSION['adminLoggedBy'];
+    //         require("./view/studentlist.php");
+    //     }
+    //     else
+    //     {
+    //         echo "view not found";
+    //     }
+    //     return null;
+    // }
 
     #renaming images and ensured that moved in our desired path
     public function image($getValues)
@@ -75,28 +103,30 @@ class student
         if(file_exists("./view/StudentAdd.php"))
         {
             require_once ("./view/StudentAdd.php");
-            $getValues = $_POST;
-
-            #calculate age via dob
-            $dob = $getValues['dob'];
-            $dobDate = new DateTime($dob);
-            $now = new DateTime();
-            $age = $now->diff($dobDate);
-            $age = $age->y;
-
-            #image handling through image function
-            $targetFilePath = $this->image($getValues);
-            $para = $this->studentModelObj->studentAdder($getValues, $targetFilePath, $age);
-            if (!$para)
+            if(isset($_POST['dob']))
             {
-                echo "False";
+                $getValues = $_POST;
+                #calculate age via dob
+                $dob = $getValues['dob'];
+                $dobDate = new DateTime($dob);
+                $now = new DateTime();
+                $age = $now->diff($dobDate);
+                $age = $age->y;
+
+                #image handling through image function
+                $targetFilePath = $this->image($getValues);
+                $para = $this->studentModelObj->studentAdder($getValues, $targetFilePath, $age);
+                if (!$para)
+                {
+                    echo "False";
+                }
+                else
+                {
+                    header("Refresh:2;url=index.php?mod=student&view=studentList");
+                    exit();
+                }
+                return $para;
             }
-            else
-            {
-                header("Refresh:2;url=index.php?mod=student&view=studentList");
-                exit();
-            }
-            return $para;
         }
         else
         {
@@ -107,7 +137,9 @@ class student
     #to soft delete a student
     public function studentDelete($request)
     {
-        $id = $_GET['student_id'];
+        // $id = $_GET['student_id'];
+        $id = $request['request_data']['student_id'];
+
         $msg = $this->studentModelObj->studentDelete($id);
         if(!$msg)
         {
@@ -123,7 +155,8 @@ class student
     #to interface the form to edit
     public function studentEdit($request)
     {
-        $uid = $_GET['student_id'];
+        // $uid = $_GET['student_id'];
+        $uid = $request['request_data']['student_id'];
         $quer = $this->studentModelObj->particularShow($uid);
         if(file_exists("view/StudentEdit.php"))
         {
@@ -142,8 +175,23 @@ class student
 
         #image handling
         $targetFilePath = $this->image($gettedValues);
-
-        $msg = $this->studentModelObj->studentUpdate($gettedValues, $targetFilePath);
+        $dob = $gettedValues['dob'];
+            $dobDate = new DateTime($dob);
+            $now = new DateTime();
+            $age = $now->diff($dobDate);
+            $age = $age->y;
+        if($targetFilePath==NULL || $age==NULL)
+        {
+            // print_r($gettedValues);
+            
+            $targetFilePath = $gettedValues['profile'];
+            $msg = $this->studentModelObj->studentUpdate($gettedValues, $targetFilePath,$age);
+        }
+        else
+        {
+            $msg = $this->studentModelObj->studentUpdate($gettedValues, $targetFilePath,$age);
+        }
+        
         if(!$msg)
         {
             echo "Not updated";
@@ -170,9 +218,10 @@ class student
     }
 
     #view a particular student
-    public function studentview()
+    public function studentview($request)
     {
-        $getId = $_GET['student_id'];
+        // $getId = $_GET['student_id'];
+        $getId = $request['request_data']['student_id'];
         $viewQuer = $this->studentModelObj->particularShow($getId);
         if(file_exists('./view/view.php'))
         {
