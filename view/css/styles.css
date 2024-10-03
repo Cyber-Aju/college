@@ -5,16 +5,17 @@
 	--pink: #be1e55;
 }
 
-.body 
+body 
 {
     padding:0px;
     margin:0px;
+	background-color:#073763;
 }
 .parent
 {
     width:1530px;
-    height:690px;
-    background-color:#073763;
+    /* height:690px; */
+
     position:absolute;
 }
 .parent h1
@@ -23,7 +24,11 @@
     color:white;
     #margin-top:100px;
 }
-
+.selectData
+{
+	width: 315px;
+    height: 35px;
+}
 /* login.php */
 .form
 {

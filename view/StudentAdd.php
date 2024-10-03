@@ -29,7 +29,15 @@
 	</div>
 	<div class="dept">
         <label for="department">Department</label>
-        <input id="department" type="text" name="department" required ><br><br>
+        <!-- <input id="department" type="text" name="department" required ><br><br> -->
+
+		<select name="department" id="department" class="selectData">
+		<option value="CSE">CSE</option>
+		  <option value="ECE" >ECE</option>
+		  <option value="EEE" >EEE</option>
+		  <option value="MECH" >MECH</option>
+		  <option value="IT" >IT</option>
+		</select><br><br>
 	</div>
 	<div class="email">
         <label for="email">Email</label>

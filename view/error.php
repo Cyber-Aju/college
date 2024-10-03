@@ -9,10 +9,10 @@
 <body>
     <div class="parent">
         <h1 > Not Logged in ! </h1>
-        <form action="http://localhost/college/index.php" method="POST">
+        <form action="index.php?mod=admin&view=login" method="POST">
             <button type="submit">Go Back!</button>
         </form>
-        <?php header("Refresh:5;url=http://localhost/college/index.php");?>
+        <?php header("Refresh:3;url=index.php?mod=admin&view=login");?>
     </div>
     
 </body>

@@ -16,9 +16,9 @@
 <div class="parentlist">
     <?php echo "<h2>Welcome back <span class='adminname'> {$adminName} </span></h2>"; ?>
 	
-    <div class="logout"><a href='http://localhost/college/index.php?mod=admin&view=logout'><span class="label other">Logout</span></a></div>
+    <div class="logout"><a onClick = 'return logout()' href='http://localhost/college/index.php?mod=admin&view=logout'><span class="label other">Logout</span></a></div>
 	<div class="insert">
-       <a class='yellowA' href="http://localhost/college/index.php?mod=student&view=studentAdd"><span class="label other">Insert</span></a>
+       <a class='yellowA' href="http://localhost/college/index.php?mod=student&view=studentAdd"><span class="label other">Add Student</span></a>
     </div>
 	<div class="list">
 		<div class="table">
@@ -122,11 +122,11 @@
 						<a class='yellowA' href='http://localhost/college/index.php?mod=student&view=studentview&student_id={$list[$key]['student_id']}' ><span class='label yellow'>View &#x26F6;</span></a>
 					</td>
 					<td>
-						<a class='edit' id='edit' onmouseover='edit()' onmouseout()='editOut()' href='http://localhost/college/index.php?mod=student&view=studentEdit&student_id={$list[$key]['student_id']}'><span class='label blue'>&#128393;</span></a>
+						<a class='edit' id='editStudent' onClick='return editStudent()' href='http://localhost/college/index.php?mod=student&view=studentEdit&student_id={$list[$key]['student_id']}'><span class='label blue'>&#128393;</span></a>
 						
 					</td>
 					<td>
-						<a class='del' href='http://localhost/college/index.php?mod=student&view=studentDelete&student_id={$list[$key]['student_id']}'><span class='label red'>␡</span></a>
+						<a class='del' id='deleteStudent' onClick='return deleteStudent()' href='http://localhost/college/index.php?mod=student&view=studentDelete&student_id={$list[$key]['student_id']}'><span class='label red'>␡</span></a>
 					</td>
 				<tr>";
             }
@@ -137,5 +137,6 @@
 	</div>
 </div>
 
+<script src="./view/js/script.js"></script>
 </body>
 </html>

@@ -23,7 +23,7 @@
 	<div class="forminside">
         <div class="id">
             <label for="studentId">student Id </label>
-            <input id="studentId" type="text" name="student_id" value="<?php echo "{$quer[0]['student_id']}"?>" required>
+            <input id="studentId" type="text" name="student_id" value="<?php echo "{$quer[0]['student_id']}"?>" required readonly>
         </div>
 	<div class="fname">
 		<label for="first_name">First Name</label>
@@ -83,7 +83,7 @@
 	<div class="avatar">
         <label for="avatar">Choose a profile picture:</label>
 		<img src="<?php echo $quer[0]['profile_image']; ?>" width=120 height=150>
-        <input type="file" id="avatar" name="avatar" accept="image/png, image/jpeg"/> <br><br>
+        <input type="file" id="avatar" name="avatar" accept="image/png, image/jpeg" required/> <br><br>
         <input type="submit" name="submit"><br><br>
 	</div>
 	<div class="fclear">
