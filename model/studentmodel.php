@@ -50,42 +50,6 @@ class StudentModel extends Connection
         }
     }
 
-    /**
-     * fetch students from student table
-     * @return array
-     */
-    public function studentlist()
-    {
-        $list = $this->connect->prepare("
-            SELECT 
-                p.student_id, 
-                p.first_name, 
-                p.last_name, 
-                p.age, 
-                p.gender, 
-                p.profile_image,
-                p.dob, 
-                p.blood_group, 
-                c.email, 
-                c.phone, 
-                c.address, 
-                a.department, 
-                a.status
-            FROM 
-                personal p
-            JOIN contact c 
-                ON p.student_id = c.student_id
-            JOIN academic a 
-                ON p.student_id = a.student_id
-            WHERE 
-                a.status = :status || a.status = 'Not Active'
-        ");
-
-        $status = "Active";
-        $list->bindParam(":status", $status);
-        $list->execute();
-        return $list->fetchAll(PDO::FETCH_ASSOC);
-    }
 
     /**
      * add a new student and related details into the database.

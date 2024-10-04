@@ -17,16 +17,15 @@ class Student
         }
         $adminName = $_SESSION['adminLoggedBy'];
         if (file_exists('./common/header.php')) {
-            require_once('./common/header.php');
+            require('./common/header.php');
         }
         $modelPath = "./model/studentmodel.php";
         if (file_exists($modelPath)) {
-            require_once($modelPath);
+            require($modelPath);
         } else {
             echo "Folder not found!";
         }
         $this->studentModelObj = new StudentModel;
-        $this->parameter = $this->studentModelObj->studentList();
     }
 
     /**
@@ -78,36 +77,37 @@ class Student
 
     /**
      * To add new students
-     * @param mixed $request
+     * 
      * @return bool
      */
-    public function studentAdd($request)
+    public function studentAdd()
     {
         if (file_exists("./view/StudentAdd.php")) {
-            require_once("./view/StudentAdd.php");
-            if (isset($_POST['dob'])) {
-                $getValues = $_POST;
-
-                #calculate age via dob
-                $dob = $getValues['dob'];
-                $dobDate = new DateTime($dob);
-                $now = new DateTime();
-                $age = $now->diff($dobDate);
-                $age = $age->y;
-
-                #image handling through image function
-                $targetFilePath = $this->image($getValues);
-                $para = $this->studentModelObj->studentAdder($getValues, $targetFilePath, $age);
-                if (!$para) {
-                    echo "False";
-                } else {
-                    header("Refresh:1;url=index.php?mod=student&view=studentList");
-                    exit();
-                }
-                return $para;
-            }
+            require("./view/StudentAdd.php");
         } else {
             echo "student add file is not included!";
+        }
+        if (isset($_POST['dob'])) {
+            $getValues = $_POST;
+
+            #calculate age via dob
+            $dob = $getValues['dob'];
+            $dobDate = new DateTime($dob);
+            $now = new DateTime();
+            $age = $now->diff($dobDate);
+            $age = $age->y;
+            
+            #image handling through image function
+            $targetFilePath = $this->image($getValues);
+            $insertedData = $this->studentModelObj->studentAdder($getValues, $targetFilePath, $age);
+            if (!$insertedData) {
+                echo "Error page";
+            } else {
+                // header("Refresh:1;url=index.php?mod=student&view=studentList");
+                echo "<h2>Inserted Successfully!</h2><script>window.location.href = 'http://localhost/college/index.php?mod=student&view=studentList';</script>";
+                exit();
+            }
+            return $insertedData;
         }
     }
 
@@ -139,7 +139,7 @@ class Student
         $uid = $request['request_data']['student_id'];
         $quer = $this->studentModelObj->particularShow($uid);
         if (file_exists("view/StudentEdit.php")) {
-            require_once("view/StudentEdit.php");
+            require("view/StudentEdit.php");
         } else {
             echo "wrong view path";
         }
@@ -164,8 +164,10 @@ class Student
 
         if ($targetFilePath == NULL || $age == NULL) {
             $targetFilePath = $gettedValues['profile'];
-            $msg = $this->studentModelObj->studentUpdate($gettedValues, $targetFilePath, $age);
+            // $updateArray=[$gettedValues,$targetFilePath,$age];
+            $msg = $this->studentModelObj->studentUpdate($updateArray);
         } else {
+            // $updateArray=[$gettedValues,$targetFilePath,$age];
             $msg = $this->studentModelObj->studentUpdate($gettedValues, $targetFilePath, $age);
         }
 
@@ -185,7 +187,7 @@ class Student
     {
         $department = isset($_POST['department']) ? $_POST['department'] : '';
         $status = isset($_POST['status']) ? $_POST['status'] : '';
-        $first_name = isset($_POST['first_name']) ? $_POST['first_name'] : '';
+        $first_name = isset($_POST['first_name']) ? trim($_POST['first_name']) : '';
 
         // get filtered students from the model
         $paginationData = $this->studentModelObj->getFilteredStudents($department, $status, $first_name);
@@ -196,7 +198,7 @@ class Student
 
         $adminName = $_SESSION['adminLoggedBy'];
         if (file_exists('view/studentlist.php')) {
-            require_once 'view/studentlist.php';
+            require 'view/studentlist.php';
         }
     }
 
@@ -210,7 +212,7 @@ class Student
         $getId = $request['request_data']['student_id'];
         $viewQuer = $this->studentModelObj->particularShow($getId);
         if (file_exists('./view/view.php')) {
-            require_once('./view/view.php');
+            require('./view/view.php');
         }
     }
 

@@ -1,6 +1,5 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
 	<meta charset="UTF-8">
 	<meta name="Generator" content="EditPlus®">
@@ -11,7 +10,6 @@
 	<link rel="stylesheet" href="./view/css/styles.css" />
 	<script>src = "./view/js/script.js"</script>
 </head>
-
 <body>
 	<div class="parent">
 		<div class="formoutside">
@@ -84,15 +82,16 @@
 						<label for="avatar">Choose a profile picture:</label>
 						<input type="file" id="avatar" name="avatar" accept="image/png, image/jpeg" /> <br><br>
 						<input type="submit" name="submit"><br><br>
-						<button onclick="history.back()">Go Back</button>
 					</div>
 					<div class="fclear">
-
+					<div class="back">
+						<a class="label other" href="http://localhost/college/index.php?mod=student&view=studentlist">Go
+						back</a>
+					</div>
 					</div>
 				</div>
 			</form>
 		</div>
 	</div>
 </body>
-
 </html>

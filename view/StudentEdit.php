@@ -73,7 +73,7 @@
 					</div>
 					<div class="gender">
 						<label for="gender">Gender</label>
-						<select name="gender" id="gender">
+						<select name="gender" id="gender" class="selectData">
 							<option value="Male" <?php if ($quer[0]['gender'] == 'Male')
 								echo 'selected'; ?>>Male</option>
 							<option value="Female" <?php if ($quer[0]['gender'] == 'Female')
@@ -83,7 +83,7 @@
 					</div>
 					<div class="blood_grp">
 						<label for="blood_group">Blood group</label>
-						<select name="blood_group" id="blood_group">
+						<select name="blood_group" id="blood_group" class="selectData">
 							<option value="A POSITIVE" <?php if ($quer[0]['blood_group'] == 'A POSITIVE')
 								echo 'selected'; ?>>A POSITIVE (A+)</option>
 							<option value="A NEGATIVE" <?php if ($quer[0]['blood_group'] == 'A NEGATIVE')
@@ -111,7 +111,10 @@
 						<input type="submit" name="submit"><br><br>
 					</div>
 					<div class="fclear">
-						<button onclick="history.back()">Go Back</button>
+					<div class="back">
+						<a class="label other" href="http://localhost/college/index.php?mod=student&view=studentlist">Go
+						back</a>
+					</div>
 					</div>
 				</div>
 			</form>

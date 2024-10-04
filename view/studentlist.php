@@ -86,12 +86,6 @@
 					<th colspan='3'>
 						Actions
 					</th>
-					<!-- <th>
-						
-					</th>
-					<th>
-						
-					</th> -->
 				<tr>";
 
 					foreach ($list as $key => $value) {
@@ -137,15 +131,14 @@
 				<?php if (ceil($total_pages / $num_results_on_page) > 0): ?>
 					<ul class="pagination">
 						<?php
-						// print_r($_GET); // Debugging line to check GET parameters
 					
-						// Base URL for pagination links
+						// base URL for pagination links
 						$base_url = "index.php?mod=student&view=" . ($_GET['view'] === 'filter' ? 'filter' : 'studentlist');
 
-						// Previous Page Link
+						//previous Page Link
 						if ($page > 1): ?>
 							<li class="prev">
-								<a href="<?php echo $base_url; ?>&page=<?php echo $page - 1; ?>">Prev</a>
+								<a href="<?php echo $base_url; ?>&page=<?php echo $page - 1; ?>">Prev</a>.
 							</li>
 						<?php endif; ?>
 
@@ -194,7 +187,7 @@
 						<!-- Next Page Link -->
 						<?php if ($page < ceil($total_pages / $num_results_on_page)): ?>
 							<li class="next"><a href="<?php echo $base_url; ?>&page=<?php echo $page + 1; ?>">Next</a></li>
-						<?php endif; ?>
+						<?php endif; ?> 
 					</ul>
 				<?php endif; ?>
 
