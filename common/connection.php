@@ -3,16 +3,13 @@ class Connection
 {
     public function connect()
     {
-        $server='localhost';
-        $user="root";
-        $databaseName = "college";
-        $connectDB = new PDO("mysql:host=$server;dbname=$databaseName","$user",'1234');
-        if($connectDB)
-        {
+        $server = 'localhost';
+        $user = "root";
+        $databaseName = "mvc";
+        $connectDB = new PDO("mysql:host=$server;dbname=$databaseName", "$user", '1234');
+        if ($connectDB) {
             // echo "Successfully Connected from connection class<br>";
-        }
-        else
-        {
+        } else {
             echo "Connection Failed <br>";
         }
         return $connectDB;
@@ -20,4 +17,4 @@ class Connection
 }
 // $obj=new Connection;
 // $obj->connect();
-?> 
+?>

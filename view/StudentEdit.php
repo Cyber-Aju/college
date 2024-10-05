@@ -9,17 +9,14 @@
 	<meta name="Description" content="">
 	<title>studentAdd</title>
 	<link rel="stylesheet" href="./view/css/styles.css" />
-
-	<style>
-
-	</style>
+	<script src = "./view/js/studentForm.js"></script>
 </head>
 
 <body>
 	<div class="parent">
 		<div class="formoutside">
-			<form action="http://localhost/college/index.php?mod=student&view=studentUpdate" method="POST"
-				enctype="multipart/form-data">
+			<form action="index.php?mod=student&view=studentUpdate" method="POST"
+				enctype="multipart/form-data" onSubmit="return validateStudentForm()">
 				<p>Add Student</p>
 				<div class="forminside">
 					<div class="id">
@@ -108,11 +105,11 @@
 						<input type="hidden" id="profile" name="profile"
 							value="<?php echo $quer[0]['profile_image']; ?>">
 						<input type="file" id="avatar" name="avatar" accept="image/png, image/jpeg" /> <br><br>
-						<input type="submit" name="submit"><br><br>
+						<input onClick = "return editStudent()" type="submit" name="submit"><br><br>
 					</div>
 					<div class="fclear">
 					<div class="back">
-						<a class="label other" href="http://localhost/college/index.php?mod=student&view=studentlist">Go
+						<a class="label other" href="index.php?mod=student&view=studentlist">Go
 						back</a>
 					</div>
 					</div>

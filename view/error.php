@@ -11,10 +11,11 @@
 <body>
     <div class="parent">
         <h1> Something Wrong Happened ! </h1>
+        <h3 class="error"><?php echo $error;?></h3>
         <form action="index.php?mod=admin&view=login" method="POST">
             <button type="submit">Go Back!</button>
         </form>
-        <?php header("Refresh:3;url=index.php?mod=admin&view=login"); ?>
+        <?php //header("Location:index.php?mod=admin&view=login"); ?>
     </div>
 
 </body>

@@ -1,9 +1,14 @@
 <?php
+
+define('COMMONPATH', __DIR__ . '/common/');
+define('MODELPATH', __DIR__ . '/model/');
+define('VIEWPATH', __DIR__ . '/view/');
+
 class MainController
 {
     /**
      * @author Ajmal Akram
-     * @since 25/09/2024
+     * @since 05/10/2024
      * @method hook
      * @return void
      * 
@@ -53,7 +58,7 @@ class MainController
 
     /**
      * @author Ajmal Akram
-     * @since 25/09/2024
+     * @since 05/10/2024
      * @method run_module
      * 
      *  This function is used to re-direct the execution flow. 

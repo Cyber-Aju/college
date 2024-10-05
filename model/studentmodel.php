@@ -34,6 +34,8 @@ class StudentModel extends Connection
                         ON p.student_id = a.student_id 
                   JOIN contact c 
                         ON p.student_id = c.student_id 
+                  WHERE 
+                        a.status = :status 
                   LIMIT 
                     :limitt 
                   OFFSET
@@ -41,7 +43,8 @@ class StudentModel extends Connection
         if ($stmt = $this->connect->prepare($query)) {
             // Calculate the page to get the results we need from our table.
             $calc_page = ($page - 1) * $num_results_on_page;
-            $stmt->bindParam(':offset', $calc_page, PDO::PARAM_INT);
+            $stmt->bindValue(':status', 'Active'); //
+            $stmt->bindParam(':offset', $calc_page, PDO::PARAM_INT); //'Active'
             $stmt->bindParam(':limitt', $num_results_on_page, PDO::PARAM_INT);
             $stmt->execute();
             $result = $stmt->fetchAll(PDO::FETCH_ASSOC);
@@ -58,59 +61,66 @@ class StudentModel extends Connection
      * @param mixed $age
      * @return bool
      */
-    public function studentAdder($getValues, $targetFilePath, $age)
+    public function studentAdder($getValues)
     {
         try {
             //inserting into personal table
             $personalQuery = $this->connect->prepare("
-                INSERT INTO personal (
-                    first_name, last_name, age, gender, 
-                    profile_image, dob, blood_group
+                INSERT INTO user (
+                    username, password, user_type, status, 
+                    created_at, updated_at, register_number
                     ) 
                 VALUES 
                     (
-                    :first_name, :last_name, :age, :gender, 
-                    :profile_image, :dob, :blood_group
+                    :username, :password, :user_type, :status, 
+                    :created_at, :updated_at, :register_number
                     )
             ");
-            $personalQuery->bindParam(':first_name', $getValues['first_name']);
-            $personalQuery->bindParam(':last_name', $getValues['last_name']);
-            $personalQuery->bindParam(':age', $age);
-            $personalQuery->bindParam(':gender', $getValues['gender']);
-            $personalQuery->bindParam(':profile_image', $targetFilePath);
-            $personalQuery->bindParam(':dob', $getValues['dob']);
-            $personalQuery->bindParam(':blood_group', $getValues['blood_group']);
+            $personalQuery->bindParam(':username', $getValues['username']);
+            $personalQuery->bindParam(':password', md5($getValues['password']));
+            $personalQuery->bindParam(':user_type', $getValues['user_type']);
+            $personalQuery->bindParam(':status', $getValues['status']);
+            $personalQuery->bindParam(':created_at', $getValues['created_at']);
+            $personalQuery->bindParam(':updated_at', $getValues['updated_at']);
+            $personalQuery->bindParam(':register_number', $getValues['register_number']);
             $personalQuery->execute();
-            $student_id = $this->connect->lastInsertId(); // Get the last inserted student_id
-
-            //inserting into contact table
-            $contactQuery = $this->connect->prepare("
-                INSERT INTO contact (
-                    student_id, email, phone, address
-                    ) 
-                VALUES (
-                    :student_id, :email, :phone, :address
-                    )
-            ");
-            $contactQuery->bindParam(':student_id', $student_id);
-            $contactQuery->bindParam(':email', $getValues['email']);
-            $contactQuery->bindParam(':phone', $getValues['phone']);
-            $contactQuery->bindParam(':address', $getValues['address']);
-            $contactQuery->execute();
+            $user_id = $this->connect->lastInsertId(); // Get the last inserted student_id
 
             //inserting into academic table
             $academicQuery = $this->connect->prepare("
-                INSERT INTO academic (
-                    student_id, department, status
+                INSERT INTO department (
+                    department
                     ) 
                 VALUES (
-                    :student_id, :department, :status
+                    :department
                     )
             ");
-            $academicQuery->bindParam(':student_id', $student_id);
             $academicQuery->bindParam(':department', $getValues['department']);
-            $academicQuery->bindParam(':status', $getValues['status']);
             $academicQuery->execute();
+            $dept_id = $this->connect->lastInsertId();
+
+            //inserting into contact table
+            $contactQuery = $this->connect->prepare("
+                INSERT INTO user_details (
+                    r_user_id, firstname, lastname,r_department_id, dob, gender, email, mobile, address, blood_group, image_path
+                    ) 
+                VALUES (
+                    :r_user_id, :firstname, :lastname,:r_department_id, :dob, :gender, :email, :mobile, :address, :blood_group, :image_path
+                    )
+            ");
+            $contactQuery->bindParam(':r_user_id', $user_id);
+            $contactQuery->bindParam(':firstname', $getValues['firstname']);
+            $contactQuery->bindParam(':lastname', $getValues['lastname']);
+            $contactQuery->bindParam(':r_department_id', $dept_id);
+            $contactQuery->bindParam(':dob', $getValues['dob']);
+            $contactQuery->bindParam(':gender', $getValues['gender']);
+            $contactQuery->bindParam(':email', $getValues['email']);
+            $contactQuery->bindParam(':mobile', $getValues['mobile']);
+            $contactQuery->bindParam(':address', $getValues['address']);
+            $contactQuery->bindParam(':blood_group', $getValues['blood_group']);
+            $contactQuery->bindParam(':image_path', $getValues['image_path']);
+            $contactQuery->execute();
+
             return true;
         } catch (Exception $e) {
             echo "Failed to store in DB: " . $e->getMessage();
@@ -277,13 +287,13 @@ class StudentModel extends Connection
         ";
 
         if (!empty($department)) {
-            $getAll .= " && a.department = :department";
+            $getAll .= " AND a.department = :department";
         }
         if (!empty($status)) {
-            $getAll .= " && a.status = :status";
+            $getAll .= " AND a.status = :status";
         }
         if (!empty($first_name)) {
-            $getAll .= " && p.first_name LIKE :first_name";
+            $getAll .= " AND p.first_name LIKE :first_name";
         }
 
         $getAll .= " LIMIT :limit OFFSET :offset";

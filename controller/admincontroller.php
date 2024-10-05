@@ -25,9 +25,20 @@ class Admin
      */
     public function adminvalidation()
     {
-        $getValues = $_POST;
-        $isValid = $this->adminModelObj->adminValidate($getValues);
+        if (isset($_POST['email']) && isset($_POST['password'])) {
+            $email = filter_var(trim($_POST['email']), FILTER_SANITIZE_EMAIL);
+            $password = trim($_POST['password']);
+    
+            if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
+                $error = "Invalid email format!";
+                require_once('./view/error.php');
+                return;
+            }
+            $getValues = ['email' => $email, 'password' => $password];
+            $isValid = $this->adminModelObj->adminValidate($getValues);
+        }
         if (!$isValid) {
+            $error = "Wrong Mail and Password";
             require_once('./view/error.php');
         } else {
             session_start();
@@ -36,7 +47,6 @@ class Admin
             $_SESSION['isAdminLoggedIn'] = true;
             header('Location: index.php?mod=student&view=studentlist');
             exit();
-
         }
     }
 

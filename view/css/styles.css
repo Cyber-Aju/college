@@ -21,6 +21,11 @@ body
     text-align:center;
     color:white;
 }
+.error
+{
+	text-align:center;
+	color:var(--yellow);
+}
 .selectData
 {
 	width: 315px;
@@ -286,7 +291,7 @@ table {
 }
  th
 {
-	background-color:#073763;
+	background-color:var(--blue);
 	color:white;
 }
 th:nth-child(1) {
@@ -352,6 +357,7 @@ td {
 	white-space: nowrap;
 	vertical-align: baseline;
 	border-radius: .25em;
+	box-shadow: 1px 2px 3px gray;
 }
 .labelSuccess
 {
@@ -414,7 +420,7 @@ td {
 .dropdown-content {
   display: none;
   position: absolute;
-  background-color: #073763;
+  background-color: var(--blue);
   min-width: 80px;
   box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
   padding: 5px 7px;
@@ -431,7 +437,7 @@ td {
 }
 .adminname
 {
-	color:#073763;
+	color:var(--blue);
 }
 .pagination {
 	list-style-type: none;
@@ -532,7 +538,7 @@ td {
 	}
     .subhead
     {
-        color:#073763;
+        color:var(--blue);
         font-weight:bold;
         /* #background-color:yellow; */
     }

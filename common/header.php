@@ -10,9 +10,9 @@
 </style>
 </head>
 <body>
-    <div class="header" >
+    <header class="header" >
         <div class="headername" > <?php echo "<h2>Welcome back <span class='adminname'> {$adminName} </span></h2>"; ?></div>
         <div class="logout"><a onClick = 'return logout()' href='index.php?mod=admin&view=logout'><span class="label other">Logout</span></a></div>
-    </div>
+    </header>
 </body>
 </html>
