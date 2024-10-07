@@ -70,7 +70,7 @@ function validateStudentForm() {
   } else if (password === rePassword) {
   }
 
-  // Validate age (must be 17+ years)
+  // validate age (must be 17+ years)
   let dobDate = new Date(dob);
   let currentDate = new Date();
   let ageDiff = currentDate.getFullYear() - dobDate.getFullYear();

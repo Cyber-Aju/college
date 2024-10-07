@@ -1,5 +1,8 @@
 <?php
-require('./controller/basecontroller.php');
+if (file_exists('./controller/basecontroller.php')) {
+    require_once('./controller/basecontroller.php');
+}
+
 /**
  * Student class that handles student operations
  */
@@ -16,18 +19,7 @@ class Student extends SubController
             exit();
         }
         $this->fileHandling($mvc = 'COMMON', $file = 'header', NULL);
-        // if (file_exists('./common/header.php')) {
-        //     require('./common/header.php');
-        // }
         $this->fileHandling($mvc = 'MODEL', $file = 'studentmodel', NULL);
-
-        // $modelPath = "./model/studentmodel.php";
-        // if (file_exists($modelPath)) {
-        //     require($modelPath);
-        // } else {
-        //     $error = "Model Not Found";
-        //     require_once('./view/error.php');
-        // }
         $this->studentModelObj = new StudentModel;
     }
 
@@ -39,78 +31,7 @@ class Student extends SubController
     public function studentList()
     {
         $paginationData = $this->studentModelObj->studentlistPagination();
-        // print_r($paginationData);
-        // $list = $paginationData['result'];
-        // $total_pages = $paginationData['total_pages'];
-        // $page = $paginationData['page'];
-        // $num_results_on_page = $paginationData['num_results_on_page'];
-
-        // if (is_array($list) && file_exists("./view/studentlist.php")) {
-        //     require("./view/studentlist.php");
-        // } else {
-        //     $error = "view list not found";
-        //     require_once('./view/error.php');
-        // }
-        // print_r($list);
-        /**
-         * [0] => Array
-                (
-                    [user_id] => 5
-                    [username] => admin@infiniti
-                    [password] => Inf!n!t!
-                    [user_type] => admin
-                    [status] => 
-                    [created_at] => 2024-10-05 21:10:07
-                    [updated_at] => 2024-10-05 21:10:07
-                    [register_number] => AD001
-                    [detail_id] => 1
-                    [r_user_id] => 5
-                    [firstname] => Ajmal
-                    [lastname] => Akram
-                    [r_department_id] => 2
-                    [dob] => 2002-10-17
-                    [gender] => male
-                    [email] => ajmalakram152@gmail.com
-                    [mobile] => 7094653492
-                    [address] => TVK Main Road, Ammapet, Salem
-                    [blood_group] => B+
-                    [image_path] => ./view/uploads/_Ajmal.jpg
-                    [department_id] => 2
-                    [department] => 
-                )
-         */
         $this->fileHandling($mvc = 'VIEW', $file = 'studentlist', $paginationData);
-
-    }
-
-    /**
-     * renaming images and ensured that moved in our desired path
-     * @param mixed $getValues
-     * @return string
-     */
-    public function image($getValues)
-    {
-        //checking image has any error
-        if (isset($_FILES['avatar']) && $_FILES['avatar']['error'] === 0) {
-            $file = $_FILES['avatar'];
-            $student_dept = $getValues['department'];
-            $student_name = $getValues['first_name'];
-            $targetDir = "./view/uploads/";
-
-            //generate a new filename using student_name with department name
-            $fileType = pathinfo($file['name'], PATHINFO_EXTENSION);
-            $newFileName = $student_dept . "_" . $student_name . "." . $fileType;
-            $targetFilePath = $targetDir . $newFileName;
-
-            //move the file to the target directory with the new name
-            if (move_uploaded_file($file['tmp_name'], $targetFilePath)) {
-                return $targetFilePath;
-            } else {
-                $error = "Error moving the uploaded file.";
-                require_once('./view/error.php');
-            }
-        }
-        return null;
     }
 
     /**
@@ -120,43 +41,18 @@ class Student extends SubController
      */
     public function studentAdd()
     {
-        // if (file_exists("./view/StudentAdd.php")) {
-        //     require('./view/StudentAdd.php');
-        // } else {
-        //     $error = "student add file is not included!";
-        //     require_once('./view/error.php');
-        // }
         $this->fileHandling($mvc = 'VIEW', $file = 'StudentAdd', NULL);
-        // print_r($_POST);
-        /**
-         * 
 
-
-Array
-(
-    [username] => admin@infiniti
-    [password] => Inf!n!t!
-    [re-password] => Inf!n!t!
-    [first_name] => Ajmal
-    [last_name] => Akram
-    [department] => CSE
-    [email] => ajmalakram152@gmail.com
-    [phone] => 7094653492
-    [dob] => 2002-10-17
-    [address] => TVK main road, Ammapet, Salem
-    [gender] => male
-    [blood_group] => B+
-    [submit] => Submit
-)
-         */
         if (isset($_POST['submit'])) {
-            //calculate age via dob
-            // $dob = $_POST['dob'];
-            // $dobDate = new DateTime($dob);
-            $noow = new DateTime("now", new DateTimeZone('Asia/Kolkata'));
-            $now = $noow->format('Y-m-d H:i:s');
-            // $age = $now->diff($dobDate);
-            // $age = $age->y;
+            $currentDate = new DateTime("now", new DateTimeZone('Asia/Kolkata'));
+            $now = $currentDate->format('Y-m-d H:i:s');
+            $dob = new DateTime($_POST['dob']);
+            $age = $currentDate->diff($dob)->y;
+            if ($age > 17) {
+                $isDob = $_POST['dob'];
+            } else {
+                echo "<script>alert('Age should be above 17')</script>";
+            }
 
             //image handling through image function
             $targetFilePath = $this->image($_POST);
@@ -164,10 +60,9 @@ Array
             $regno = 1;
             $user_type = 'ST00';
             $register_number = $user_type . $regno;
-            // $type = if(usertype == admin? AD:ST);
             $getValues = [
-                'username' => $_POST['username'],
-                'password' => $_POST['password'],
+                'username' => trim($_POST['username']),
+                'password' => trim($_POST['password']),
                 'user_type' => 'student',
                 'status' => 'active',
                 'created_at' => $now,
@@ -178,7 +73,7 @@ Array
                 'department' => $_POST['department'],
                 'gender' => $_POST['gender'],
                 'image_path' => $targetFilePath,
-                'dob' => $_POST['dob'],
+                'dob' => $isDob,
                 'blood_group' => $_POST['blood_group'],
                 'email' => strtolower($_POST['email']),
                 'mobile' => $_POST['mobile'],
@@ -190,12 +85,13 @@ Array
             $regno = $insertedData;
             if (!$insertedData) {
                 $error = "Student data not inserted";
-                require_once('./view/error.php');
+                $this->error($error);
             } else {
-                echo "DONE!";
-                // echo "<h2>Inserted Successfully!</h2><script>window.location.href = 'http://localhost/college/index.php?mod=student&view=studentList';</script>";
+                $message = 'Inserted';
+                $this->success($message);
+                echo "<h2>Inserted Successfully!</h2><script>window.location.href = 'http://localhost/college/index.php?mod=student&view=studentList';</script>";
                 // header("Location:index.php?mod=student&view=studentList");
-                // exit();
+                exit();
             }
             return $insertedData;
         }
@@ -213,8 +109,10 @@ Array
         $msg = $this->studentModelObj->studentDelete($id);
         if (!$msg) {
             $error = "Deleted unsuccessfully";
-            require_once('./view/error.php');
+            $this->error($error);
         } else {
+            $message = 'deleted';
+            $this->success($message);
             header("Refresh:1;url=index.php?mod=student&view=studentList");
             exit();
         }
@@ -229,12 +127,6 @@ Array
     {
         $uid = $request['request_data']['student_id'];
         $quer = $this->studentModelObj->particularShow($uid);
-        // if (file_exists("view/StudentEdit.php")) {
-        //     require("view/StudentEdit.php");
-        // } else {
-        //     $error = "Edit file not included correctly";
-        //     require_once('./view/error.php');
-        // }
         $this->fileHandling($mvc = 'VIEW', $file = 'StudentEdit', $quer);
     }
 
@@ -245,17 +137,11 @@ Array
     public function studentUpdate($request)
     {
         if (isset($_POST['submit'])) {
-            //calculate age via dob
-            // $dob = $_POST['dob'];
-            // $dobDate = new DateTime($dob);
-            $noow = new DateTime("now", new DateTimeZone('Asia/Kolkata'));
-            $now = $noow->format('Y-m-d H:i:s');
-            // $age = $now->diff($dobDate);
-            // $age = $age->y;
+            $currentDateTime = new DateTime("now", new DateTimeZone('Asia/Kolkata'));
+            $now = $currentDateTime->format('Y-m-d H:i:s');
 
             //image handling through image function
             $targetFilePath = $this->image($_POST);
-            // print_r($_POST);
             $gettedValues = [
                 'user_id' => $_POST['user_id'],
                 'username' => $_POST['username'],
@@ -285,23 +171,44 @@ Array
 
             if (!$msg) {
                 $error = "Not updated";
-                require_once('./view/error.php');
+                $this->error($error);
             } else {
-                // header("Refresh:1;url=index.php?mod=student&view=studentList");
+                $message = 'Updated';
+                $this->success($message);
+                header("Refresh:1;url=index.php?mod=student&view=studentList");
                 exit();
             }
         }
-        // $gettedValues = $_POST;
+    }
 
-        //image handling
-        // $targetFilePath = $this->image($gettedValues);
+    /**
+     * renaming images and ensured that moved in our desired path
+     * @param mixed $getValues
+     * @return string
+     */
+    public function image($getValues)
+    {
+        //checking image has any error
+        if (isset($_FILES['avatar']) && $_FILES['avatar']['error'] === 0) {
+            $file = $_FILES['avatar'];
+            $student_dept = $getValues['department'];
+            $student_name = $getValues['firstname'];
+            $targetDir = "./view/uploads/";
 
-        // $dob = $gettedValues['dob'];
-        // $dobDate = new DateTime($dob);
-        // $now = new DateTime();
-        // $age = $now->diff($dobDate);
-        // $age = $age->y;
+            //generate a new filename using student_name with department name
+            $fileType = pathinfo($file['name'], PATHINFO_EXTENSION);
+            $newFileName = $student_dept . "_" . $student_name . "." . $fileType;
+            $targetFilePath = $targetDir . $newFileName;
 
+            //move the file to the target directory with the new name
+            if (move_uploaded_file($file['tmp_name'], $targetFilePath)) {
+                return $targetFilePath;
+            } else {
+                $error = "Error moving the uploaded file.";
+                $this->error($error);
+            }
+        }
+        return null;
     }
 
     /**
@@ -317,17 +224,7 @@ Array
         // get filtered students from the model
         $paginationData = $this->studentModelObj->getFilteredStudents($department, $status, $first_name);
 
-        // $list = $paginationData['result'];
-        // $total_pages = $paginationData['total_pages'];
-        // $page = $paginationData['page'];
-        // $num_results_on_page = $paginationData['num_results_on_page'];
-
-        $adminName = $_SESSION['adminLoggedBy'];
-        // if (file_exists('view/studentlist.php')) {
-        //     require 'view/studentlist.php';
-        // }
         $this->fileHandling($mvc = 'VIEW', $file = 'studentlist', $paginationData);
-
     }
 
     /**
@@ -339,11 +236,7 @@ Array
     {
         $getId = $request['request_data']['student_id'];
         $viewQuer = $this->studentModelObj->particularShow($getId);
-        // if (file_exists('./view/view.php')) {
-        //     require('./view/view.php');
-        // }
         $this->fileHandling($mvc = 'VIEW', $file = 'view', $viewQuer);
-
     }
 
     /**

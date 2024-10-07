@@ -33,7 +33,7 @@ class StudentModel extends Connection
                   JOIN user_details ud 
                         ON u.user_id = ud.r_user_id 
                   WHERE 
-                        u.user_type = :user_type 
+                        u.user_type = :user_type AND u.status = :status
                   LIMIT 
                     :limitt 
                   OFFSET
@@ -41,12 +41,12 @@ class StudentModel extends Connection
         if ($stmt = $this->connect->prepare($query)) {
             // Calculate the page to get the results we need from our table.
             $calc_page = ($page - 1) * $num_results_on_page;
-            $stmt->bindValue(':user_type', 'student'); //
+            $stmt->bindValue(':user_type', "student");
+            $stmt->bindValue(':status', "active");
             $stmt->bindParam(':offset', $calc_page, PDO::PARAM_INT); //'Active'
             $stmt->bindParam(':limitt', $num_results_on_page, PDO::PARAM_INT);
             $stmt->execute();
             $result = $stmt->fetchAll(PDO::FETCH_ASSOC);
-            // print_r($result);
             $all = array('total_pages' => $total_pages, 'page' => $page, 'num_results_on_page' => $num_results_on_page, 'result' => $result);
             return $all;
         }
@@ -123,12 +123,18 @@ class StudentModel extends Connection
      */
     public function studentDelete($id)
     {
-        $update = $this->connect->prepare("UPDATE user
-                                                  SET status = 'inactive'
-                                                  WHERE user_id = :id");
-        $update->bindParam(':id', $id);
-        $update->execute();
-        return $update;
+        try {
+            $update = $this->connect->prepare("UPDATE user
+            SET status = 'inactive'
+            WHERE user_id = :id");
+            $update->bindParam(':id', $id);
+            $update->execute();
+            return $update;
+        } catch (Exception $e) {
+            echo "Failed to delete in DB: " . $e->getMessage();
+            return false;
+        }
+
     }
 
     /**
@@ -260,7 +266,7 @@ class StudentModel extends Connection
             user u
         JOIN user_details ud 
             ON u.user_id = ud.r_user_id
-        WHERE user_type = 'student' 
+        WHERE u.user_type = 'student' 
         ";
 
 

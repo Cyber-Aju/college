@@ -1,6 +1,14 @@
 <?php
 class SubController
 {
+    /**
+     * handles file handling for MVC
+     * @param mixed $mvc
+     * @param mixed $file
+     * @param mixed $parameter
+     * @throws \Exception
+     * @return void
+     */
     public function fileHandling($mvc, $file, $parameter)
     {
         $adminName = $_SESSION['adminLoggedBy'];
@@ -10,7 +18,7 @@ class SubController
                     require_once(MODELPATH . $file . ".php");
                 } else {
                     $error = "Model file Not Found";
-                    require_once('./view/error.php');
+                    $this->error($error);
                 }
                 break;
 
@@ -39,7 +47,7 @@ class SubController
                     require_once(VIEWPATH . $file . ".php");
                 } else {
                     $error = "View file Not Found";
-                    require_once('./view/error.php');
+                    $this->error($error);
                 }
                 break;
 
@@ -49,11 +57,35 @@ class SubController
                     require_once($commonPath);
                 } else {
                     $error = "common file Not Found";
-                    require_once('./view/error.php');
+                    $this->error($error);
                 }
                 break;
             default:
                 throw new Exception("Invalid file type specified in base controller.");
+        }
+    }
+
+    /**
+     * Handles error
+     * @param mixed $error
+     * @return void
+     */
+    public function error($error)
+    {
+        if (file_exists('./view/error.php')) {
+            require_once('./view/error.php');
+        }
+    }
+
+    /**
+     * Handles success message
+     * @param mixed $message
+     * @return void
+     */
+    public function success($message)
+    {
+        if (file_exists('./view/success.php')) {
+            require_once('./view/success.php');
         }
     }
 
