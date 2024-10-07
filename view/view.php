@@ -15,22 +15,28 @@
 </head>
 
 <body>
+	<?php //print_r($viewQuer); ?>
 	<div class="parent">
 		<div class="child">
 			<p>Student Details </p>
 			<div>
 				<div class="profile">
-					<img src="<?php echo "{$viewQuer[0]['profile_image']}" ?>" alt="" width=80 height=230>
+					<img src="<?php echo "{$viewQuer[0]['image_path']}" ?>" alt="" width=80 height=230>
 				</div>
 				<div class="personal"><span class="subhead">Personal Details</span>
 					<div class="sid">
-						Student Id : <?php echo $viewQuer[0]['student_id'] ?>
+						Student Id : <?php echo $viewQuer[0]['user_id'] ?>
 					</div>
 					<div class="fnamev">
-						Name : <?php echo $viewQuer[0]['first_name'] ?> <?php echo $viewQuer[0]['last_name'] ?>
+						Name : <?php echo $viewQuer[0]['firstname'] ?> <?php echo $viewQuer[0]['lastname'] ?>
 					</div>
 					<div class="agev">
-						Age : <?php echo $viewQuer[0]['age'] ?>
+						<?php $dob = $viewQuer[0]['dob'];
+						$dobDate = new DateTime($dob);
+						$now = new DateTime();
+						$age = $now->diff($dobDate);
+						$age = $age->y; ?>
+						Age : <?php echo $age ?>
 					</div>
 					<div class="genderv">
 						Gender : <?php echo $viewQuer[0]['gender'] ?>
@@ -56,15 +62,26 @@
 					Email : <?php echo $viewQuer[0]['email'] ?>
 				</div>
 				<div class="phonev">
-					Phone : <?php echo $viewQuer[0]['phone'] ?>
+					Phone : <?php echo $viewQuer[0]['mobile'] ?>
 				</div>
 				<div class="addressv">
 					Address : <?php echo $viewQuer[0]['address'] ?>
 				</div>
 			</div>
-			<div class="back">
-				<a class="label other" href="http://localhost/college/index.php?mod=student&view=studentlist">Go
-					back</a>
+
+			<div class="back"><?php
+			if (isset($_SESSION['previous_page']) && isset($_GET['login']) && $_GET['login'] === 'student') {
+				// If coming from the previous page and login was successful
+				echo "<a class='' href=''></a>";
+				unset($_SESSION['previous_page']);  // Clear after using
+			
+			} else if (!isset($_GET['login'])) {
+				// If login was not set, show a generic back button
+				echo "<a class='label other' href='http://localhost/college/index.php?mod=student&view=studentlist'>Go back</a>";
+			}
+			?>
+
+
 			</div>
 		</div>
 	</div>

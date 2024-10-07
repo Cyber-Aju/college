@@ -48,8 +48,8 @@ class MainController
             }
         } else {
             $datas = [
-                'model' => "admin",
-                'controller' => "admin",
+                'model' => "login",
+                'controller' => "login",
                 'view' => "login",
             ];
             $this->run_module($datas);
@@ -78,6 +78,7 @@ class MainController
                 #controller file is not exists means
                 throw new \Exception('File Not Found');
             } else {
+                session_start();
                 include $path;
                 $main = new $classname();
                 $func_name = $request_datas['view'];

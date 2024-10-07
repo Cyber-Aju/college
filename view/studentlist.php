@@ -38,7 +38,7 @@
 						            <form method='POST' action='http://localhost/college/index.php?mod=student&view=filter'>
 						                <input type='hidden' name='mod' value='student'>
 						                <input type='hidden' name='view' value='filter'>
-										<input type='text' name='first_name' placeholder=' &#x1F50D; Search Name'>
+										<input type='text' name='firstname' placeholder=' &#x1F50D; Search Name'>
 										<button type='submit'>	Filter  </button>
 
 						        </div>
@@ -91,16 +91,16 @@
 					foreach ($list as $key => $value) {
 						echo "<tr>
 					<td>
-						{$list[$key]['student_id']}
+						{$list[$key]['user_id']}
 					</td>
 					<td>
-						<div class='tableRow'><div class='image'><img src='{$list[$key]['profile_image']}' width=50 height=50></div><div class='name'><span style='text-transform:capitalize;'>{$list[$key]['first_name']} {$list[$key]['last_name']}</span></div></div>
+						<div class='tableRow'><div class='image'><img src='{$list[$key]['image_path']}' width=50 height=50></div><div class='name'><span style='text-transform:capitalize;'>{$list[$key]['firstname']} {$list[$key]['lastname']}</span></div></div>
 					</td>
 					<td>
 						<span style='text-transform:uppercase;'>{$list[$key]['department']}<span>
 					</td>
 					<td>";
-						if ($list[$key]['status'] == 'Active') {
+						if ($list[$key]['status'] == 'active') {
 							echo "<span class='label labelSuccess'>Active</span>";
 						} else {
 							echo "<span class='label red'>Not Active</span>";
@@ -110,14 +110,14 @@
 						{$list[$key]['email']}
 					</td>
 					<td>
-						<a class='yellowA' href='http://localhost/college/index.php?mod=student&view=studentview&student_id={$list[$key]['student_id']}' ><span class='label yellow'>View &#x26F6;</span></a>
+						<a class='yellowA' href='http://localhost/college/index.php?mod=student&view=studentview&student_id={$list[$key]['user_id']}' ><span class='label yellow'>View &#x26F6;</span></a>
 					</td>
 					<td>
-						<a class='edit' id='editStudent' onClick='return editStudent()' href='http://localhost/college/index.php?mod=student&view=studentEdit&student_id={$list[$key]['student_id']}'><span class='label blue'>&#128393;</span></a>
+						<a class='edit' id='editStudent' onClick='return editStudent()' href='http://localhost/college/index.php?mod=student&view=studentEdit&student_id={$list[$key]['user_id']}'><span class='label blue'>&#128393;</span></a>
 						
 					</td>
 					<td>
-						<a class='del' id='deleteStudent' onClick='return deleteStudent()' href='http://localhost/college/index.php?mod=student&view=studentDelete&student_id={$list[$key]['student_id']}'><span class='label red'>␡</span></a>
+						<a class='del' id='deleteStudent' onClick='return deleteStudent()' href='http://localhost/college/index.php?mod=student&view=studentDelete&student_id={$list[$key]['user_id']}'><span class='label red'>␡</span></a>
 					</td>
 				<tr>";
 					}
@@ -131,7 +131,7 @@
 				<?php if (ceil($total_pages / $num_results_on_page) > 0): ?>
 					<ul class="pagination">
 						<?php
-					
+
 						// base URL for pagination links
 						$base_url = "index.php?mod=student&view=" . ($_GET['view'] === 'filter' ? 'filter' : 'studentlist');
 
@@ -187,7 +187,7 @@
 						<!-- Next Page Link -->
 						<?php if ($page < ceil($total_pages / $num_results_on_page)): ?>
 							<li class="next"><a href="<?php echo $base_url; ?>&page=<?php echo $page + 1; ?>">Next</a></li>
-						<?php endif; ?> 
+						<?php endif; ?>
 					</ul>
 				<?php endif; ?>
 

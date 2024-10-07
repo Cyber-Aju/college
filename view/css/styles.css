@@ -113,6 +113,11 @@ body
 {
 	width:0px;
 }
+.password
+{
+	width: 50%;
+    float: left;
+}
 .fname
 {
 	width:60%;
@@ -148,12 +153,25 @@ body
 	width:50%;
 	float:right;
 }
-.phone
+.id
+{
+	width: 50%;
+    float: left;
+}
+.register_number
+{
+	width: 50%;
+    float: right;
+}
+.mobile
 {
 	width:50%;
 	float:left;
 }
-
+.blood_grp
+{
+	width: 50%;
+}
 .address
 {
 	width:50%;
@@ -251,7 +269,7 @@ body
 }
 .avataredit
 {
-	width:50%;
+	width:70%;
 	float:right;
 }
 .fclear
@@ -527,9 +545,18 @@ td {
 		width:40%;
 		float:left;
 	}
+	.backadd
+	{
+		margin:0px 270px;
+	}
+	.backadd a
+    {
+		text-decoration: none;
+	}
     .back
     {
-        width:50%;
+        /* width:50%; */
+		height: 400px;
         margin:0px 270px;
     }
 	.back a

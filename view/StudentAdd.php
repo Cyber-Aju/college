@@ -14,7 +14,7 @@
 
 <body>
 	<div class="parent">
-		<div class="formoutside">
+		<div class="formoutside"> <!--  -->
 			<form action="index.php?mod=student&view=studentAdd" method="POST" enctype="multipart/form-data"
 				onSubmit="return validateStudentForm()">
 				<p>Add Student</p>
@@ -26,10 +26,12 @@
 					<div class="password">
 						<label for="password">Password</label>
 						<input id="password" type="password" name="password" required><br><br>
+						<!-- <input type="checkbox" onclick="myFunction()">Show Password -->
 					</div>
 					<div class="re-password">
 						<label for="re-password">Re-Password</label>
 						<input id="re-password" type="password" name="re-password" required><br><br>
+						<span id="password-error" style="color:red; display:none;"></span>
 					</div>
 					<div class="fname">
 						<label for="first_name">First name</label>
@@ -70,6 +72,7 @@
 					<div class="gender">
 						<label for="gender">Gender</label>
 						<select name="gender" id="gender" class="selectData">
+							<option value="">select</option>
 							<option value="male">Male</option>
 							<option value="female">Female</option>
 						</select><br><br>
@@ -91,10 +94,10 @@
 					<div class="avatar">
 						<label for="avatar">Choose a profile picture:</label>
 						<input type="file" id="avatar" name="avatar" accept="image/png, image/jpeg" /> <br><br>
-						<input type="submit" name="submit"><br><br>
+						<input type="submit" name="submit" onclick="return insert()"><br><br>
 					</div>
 					<div class="fclear">
-						<div class="back">
+						<div class="backadd">
 							<a class="label other" href="index.php?mod=student&view=studentlist">Go
 								back</a>
 						</div>

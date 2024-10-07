@@ -10,10 +10,9 @@ class Student extends SubController
      */
     public function __construct()
     {
-        session_start();
-        //if session false go to login
+        //if session false goes to login
         if (!isset($_SESSION['isAdminLoggedIn'])) {
-            header('Location: index.php?mod=admin&view=login');
+            header('Location: index.php?mod=login&view=login');
             exit();
         }
         $this->fileHandling($mvc = 'COMMON', $file = 'header', NULL);
@@ -40,7 +39,7 @@ class Student extends SubController
     public function studentList()
     {
         $paginationData = $this->studentModelObj->studentlistPagination();
-
+        // print_r($paginationData);
         // $list = $paginationData['result'];
         // $total_pages = $paginationData['total_pages'];
         // $page = $paginationData['page'];
@@ -53,6 +52,33 @@ class Student extends SubController
         //     require_once('./view/error.php');
         // }
         // print_r($list);
+        /**
+         * [0] => Array
+                (
+                    [user_id] => 5
+                    [username] => admin@infiniti
+                    [password] => Inf!n!t!
+                    [user_type] => admin
+                    [status] => 
+                    [created_at] => 2024-10-05 21:10:07
+                    [updated_at] => 2024-10-05 21:10:07
+                    [register_number] => AD001
+                    [detail_id] => 1
+                    [r_user_id] => 5
+                    [firstname] => Ajmal
+                    [lastname] => Akram
+                    [r_department_id] => 2
+                    [dob] => 2002-10-17
+                    [gender] => male
+                    [email] => ajmalakram152@gmail.com
+                    [mobile] => 7094653492
+                    [address] => TVK Main Road, Ammapet, Salem
+                    [blood_group] => B+
+                    [image_path] => ./view/uploads/_Ajmal.jpg
+                    [department_id] => 2
+                    [department] => 
+                )
+         */
         $this->fileHandling($mvc = 'VIEW', $file = 'studentlist', $paginationData);
 
     }
@@ -101,7 +127,7 @@ class Student extends SubController
         //     require_once('./view/error.php');
         // }
         $this->fileHandling($mvc = 'VIEW', $file = 'StudentAdd', NULL);
-        print_r($_POST);
+        // print_r($_POST);
         /**
          * 
 
@@ -125,9 +151,9 @@ Array
          */
         if (isset($_POST['submit'])) {
             //calculate age via dob
-            $dob = $_POST['dob'];
-            $dobDate = new DateTime($dob);
-            $noow = new DateTime();
+            // $dob = $_POST['dob'];
+            // $dobDate = new DateTime($dob);
+            $noow = new DateTime("now", new DateTimeZone('Asia/Kolkata'));
             $now = $noow->format('Y-m-d H:i:s');
             // $age = $now->diff($dobDate);
             // $age = $age->y;
@@ -135,13 +161,18 @@ Array
             //image handling through image function
             $targetFilePath = $this->image($_POST);
 
+            $regno = 1;
+            $user_type = 'ST00';
+            $register_number = $user_type . $regno;
+            // $type = if(usertype == admin? AD:ST);
             $getValues = [
                 'username' => $_POST['username'],
                 'password' => $_POST['password'],
-                'user_type' => 'admin',
+                'user_type' => 'student',
+                'status' => 'active',
                 'created_at' => $now,
                 'updated_at' => $now,
-                'register_number' => 'AD001',
+                'register_number' => $register_number,
                 'firstname' => ucfirst(trim($_POST['first_name'])),
                 'lastname' => ucfirst(trim($_POST['last_name'])),
                 'department' => $_POST['department'],
@@ -150,12 +181,13 @@ Array
                 'dob' => $_POST['dob'],
                 'blood_group' => $_POST['blood_group'],
                 'email' => strtolower($_POST['email']),
-                'mobile' => $_POST['phone'],
+                'mobile' => $_POST['mobile'],
                 'address' => ucwords(trim($_POST['address']))
             ];
+            $regno++;
 
             $insertedData = $this->studentModelObj->studentAdder($getValues);
-
+            $regno = $insertedData;
             if (!$insertedData) {
                 $error = "Student data not inserted";
                 require_once('./view/error.php');
@@ -212,31 +244,64 @@ Array
      */
     public function studentUpdate($request)
     {
-        $gettedValues = $_POST;
+        if (isset($_POST['submit'])) {
+            //calculate age via dob
+            // $dob = $_POST['dob'];
+            // $dobDate = new DateTime($dob);
+            $noow = new DateTime("now", new DateTimeZone('Asia/Kolkata'));
+            $now = $noow->format('Y-m-d H:i:s');
+            // $age = $now->diff($dobDate);
+            // $age = $age->y;
+
+            //image handling through image function
+            $targetFilePath = $this->image($_POST);
+            // print_r($_POST);
+            $gettedValues = [
+                'user_id' => $_POST['user_id'],
+                'username' => $_POST['username'],
+                'user_type' => 'student',
+                'status' => 'active',
+                'created_at' => $_POST['created_at'],
+                'updated_at' => $now,
+                'register_number' => $_POST['register_number'],
+                'firstname' => ucfirst(trim($_POST['firstname'])),
+                'lastname' => ucfirst(trim($_POST['lastname'])),
+                'department' => $_POST['department'],
+                'gender' => $_POST['gender'],
+                'image_path' => $targetFilePath,
+                'dob' => $_POST['dob'],
+                'blood_group' => $_POST['blood_group'],
+                'email' => strtolower($_POST['email']),
+                'mobile' => $_POST['mobile'],
+                'address' => ucwords(trim($_POST['address']))
+            ];
+
+            if ($targetFilePath == NULL) {
+                $targetFilePath = $_POST['profile'];
+                $msg = $this->studentModelObj->studentUpdate($gettedValues, $targetFilePath);
+            } else {
+                $msg = $this->studentModelObj->studentUpdate($gettedValues, $targetFilePath);
+            }
+
+            if (!$msg) {
+                $error = "Not updated";
+                require_once('./view/error.php');
+            } else {
+                // header("Refresh:1;url=index.php?mod=student&view=studentList");
+                exit();
+            }
+        }
+        // $gettedValues = $_POST;
 
         //image handling
-        $targetFilePath = $this->image($gettedValues);
+        // $targetFilePath = $this->image($gettedValues);
 
-        $dob = $gettedValues['dob'];
-        $dobDate = new DateTime($dob);
-        $now = new DateTime();
-        $age = $now->diff($dobDate);
-        $age = $age->y;
+        // $dob = $gettedValues['dob'];
+        // $dobDate = new DateTime($dob);
+        // $now = new DateTime();
+        // $age = $now->diff($dobDate);
+        // $age = $age->y;
 
-        if ($targetFilePath == NULL || $age == NULL) {
-            $targetFilePath = $gettedValues['profile'];
-            $msg = $this->studentModelObj->studentUpdate($gettedValues, $targetFilePath, $age);
-        } else {
-            $msg = $this->studentModelObj->studentUpdate($gettedValues, $targetFilePath, $age);
-        }
-
-        if (!$msg) {
-            $error = "Not updated";
-            require_once('./view/error.php');
-        } else {
-            header("Refresh:1;url=index.php?mod=student&view=studentList");
-            exit();
-        }
     }
 
     /**
@@ -252,16 +317,16 @@ Array
         // get filtered students from the model
         $paginationData = $this->studentModelObj->getFilteredStudents($department, $status, $first_name);
 
-        $list = $paginationData['result'];
-        $total_pages = $paginationData['total_pages'];
-        $page = $paginationData['page'];
-        $num_results_on_page = $paginationData['num_results_on_page'];
+        // $list = $paginationData['result'];
+        // $total_pages = $paginationData['total_pages'];
+        // $page = $paginationData['page'];
+        // $num_results_on_page = $paginationData['num_results_on_page'];
 
         $adminName = $_SESSION['adminLoggedBy'];
         // if (file_exists('view/studentlist.php')) {
         //     require 'view/studentlist.php';
         // }
-        $this->fileHandling($mvc = 'VIEW', $file = 'studentlist', NULL);
+        $this->fileHandling($mvc = 'VIEW', $file = 'studentlist', $paginationData);
 
     }
 

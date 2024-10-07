@@ -1,21 +1,8 @@
 <?php
 class SubController
 {
-    // public function subcontroller($request)
-    // {
-    //     $model = "./model/{$request['mod']}" . "Model.php";
-    //     if (file_exists($model)) {
-    //         require($model);
-    //     } else {
-    //         echo "Folder not found!";
-    //     }
-    // }
-
     public function fileHandling($mvc, $file, $parameter)
     {
-        // define('MODEL', "./model/{$file}.php");
-        // define('VIEW', "./view/{$file}.php");
-        // define('COMMON', "./common/{$file}.php");
         $adminName = $_SESSION['adminLoggedBy'];
         switch ($mvc) {
             case 'MODEL':
@@ -34,6 +21,12 @@ class SubController
                             $quer = $parameter;
                             break;
                         case 'studentlist':
+                            $list = $parameter['result'];
+                            $total_pages = $parameter['total_pages'];
+                            $page = $parameter['page'];
+                            $num_results_on_page = $parameter['num_results_on_page'];
+                            break;
+                        case 'filter':
                             $list = $parameter['result'];
                             $total_pages = $parameter['total_pages'];
                             $page = $parameter['page'];
@@ -63,6 +56,19 @@ class SubController
                 throw new Exception("Invalid file type specified in base controller.");
         }
     }
+
+
+    // public function subcontroller($request)
+    // {
+    //     $model = "./model/{$request['mod']}" . "Model.php";
+    //     if (file_exists($model)) {
+    //         require($model);
+    //     } else {
+    //         echo "Folder not found!";
+    //     }
+    // }
+
+
     // $this->fileHandling(COMMON,$header='header');
 }
 ?>
